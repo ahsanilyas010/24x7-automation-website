@@ -178,7 +178,22 @@ export function Faq() {
 export function DemoForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const submit = (e: FormEvent) => { e.preventDefault(); setSending(true); setTimeout(() => setSent(true), reducedMotion() ? 0 : 900); };
+  const [error, setError] = useState('');
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSending(true); setError('');
+    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    try {
+      const res = await fetch('/api/demo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.ok) throw new Error(out.error || 'We could not send your request. Please try again.');
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'We could not send your request. Please try again.');
+    } finally {
+      setSending(false);
+    }
+  };
   if (sent) {
     return (
       <Enter from="translateY(8px)" d={350} style={{ display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-start', padding: '24px 0' }}>
@@ -198,6 +213,9 @@ export function DemoForm() {
         <select name="industry">{IND.map((x) => <option key={x.name}>{x.name}</option>)}</select>
       </label>
       <label className="field">Mobile number<input required name="phone" type="tel" placeholder="07" autoComplete="tel" /></label>
+      <label className="field">Email (optional)<input name="email" type="email" autoComplete="email" /></label>
+      <input type="text" name="company_site" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0 }} />
+      {error ? <span role="alert" style={{ fontSize: 15, lineHeight: '22px', color: '#B3261E', background: '#FBEAE8', borderRadius: 8, padding: '10px 12px' }}>{error}</span> : null}
       <button type="submit" disabled={sending} className="btn btn-primary" style={{ height: 52, fontSize: 17, border: 0, cursor: sending ? 'progress' : 'pointer' }}>
         {sending ? <><span className="dots-light"><Dots /></span>Sending</> : 'Book a demo'}
       </button>
