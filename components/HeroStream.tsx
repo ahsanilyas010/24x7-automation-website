@@ -22,6 +22,7 @@ export default function HeroStream() {
   const dotG = useRef<SVGGElement>(null);
   const dotA = useRef<SVGCircleElement>(null);
   const dotB = useRef<SVGCircleElement>(null);
+  const inbox = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = wrap.current;
@@ -48,6 +49,8 @@ export default function HeroStream() {
     const land = (m: HeroItem, id: number) => {
       setItems((prev) => [{ id, m, st: 0 as const }, ...prev].slice(0, 4));
       setClock(m.t);
+      const r = inbox.current?.getBoundingClientRect();
+      if (r) window.dispatchEvent(new CustomEvent('hero-land', { detail: { x: r.left + 8, y: r.top + 106 * (r.height / H), c: CH[m.ch].c } }));
       later(() => {
         if (!alive) return;
         setItems((prev) => prev.map((x) => (x.id === id ? { ...x, st: 1 as const } : x)));
@@ -108,7 +111,7 @@ export default function HeroStream() {
           <span style={{ fontSize: 13, color: '#6D675C', fontWeight: 500 }}>Handled at</span>
           <span style={{ fontSize: 40, lineHeight: '44px', fontWeight: 700, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{clock}</span>
         </div>
-        <div style={{ position: 'absolute', left: IN.x, top: 0, right: 0, bottom: 0, borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden' }}>
+        <div ref={inbox} style={{ position: 'absolute', left: IN.x, top: 0, right: 0, bottom: 0, borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden' }}>
           <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', borderBottom: '1px solid #E0DBD1', background: '#FFFFFF' }}>
             <span style={{ fontSize: 17, fontWeight: 700 }}>Inbox</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

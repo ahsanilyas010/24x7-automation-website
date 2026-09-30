@@ -1,13 +1,16 @@
 'use client';
 
-import { CSSProperties, useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Msg, UseCase } from './data';
 import { ChannelPill, Dots, Enter, Icon, reducedMotion } from './motion';
 
 /** Plays one sample conversation a message at a time, then loops. */
-export default function UseCaseDemo({ uc }: { uc: UseCase }) {
+export default function UseCaseDemo({ uc, onProgress, onDone }: { uc: UseCase; onProgress?: (p: number) => void; onDone?: () => boolean }) {
   const [n, setN] = useState(0);
   const [typing, setTyping] = useState(false);
+  const cb = useRef({ onProgress, onDone });
+  cb.current = { onProgress, onDone };
+  useEffect(() => { cb.current.onProgress?.(n / uc.msgs.length); }, [n, uc]);
 
   useEffect(() => {
     if (reducedMotion()) { setN(uc.msgs.length); return; }
@@ -16,7 +19,7 @@ export default function UseCaseDemo({ uc }: { uc: UseCase }) {
     const next = () => {
       if (!alive) return;
       if (i >= M.length) {
-        t = setTimeout(() => { if (!alive) return; i = 0; setN(0); t = setTimeout(next, 500); }, 4500);
+        t = setTimeout(() => { if (!alive || cb.current.onDone?.()) return; i = 0; setN(0); t = setTimeout(next, 500); }, 3200);
         return;
       }
       const m = M[i];

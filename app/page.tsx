@@ -1,7 +1,20 @@
+import { Fragment } from 'react';
 import type React from 'react';
 import HeroStream from '@/components/HeroStream';
 import { DemoForm, Faq, Industries, RevealController, UseCases } from '@/components/Interactive';
 import { IND } from '@/components/data';
+import { CountUp, HeroField, PageEffects } from '@/components/Effects';
+
+/** Splits a heading into words that rise into view when their section is revealed. */
+function Split({ text, delay = 0 }: { text: string; delay?: number }) {
+  return (
+    <span className="split" aria-label={text}>
+      {text.split(' ').map((w, i) => (
+        <Fragment key={i}><span className="w" aria-hidden="true"><span style={{ ['--i' as string]: i + delay }}>{w}</span></span>{' '}</Fragment>
+      ))}
+    </span>
+  );
+}
 
 function Logo({ size, ink, accent, spin }: { size: number; ink: string; accent: string; spin?: boolean }) {
   return (
@@ -34,9 +47,9 @@ const CHANNELS = [
 ];
 
 const STORIES = [
-  { where: 'Construction · Leeds', t: 'A builder who stopped losing evening enquiries', d: 'Most quote requests came in on WhatsApp after 7pm, when the team was off site. The AI now replies straight away and books the site visit from the chat.', stat: '2 min', statL: 'typical first reply, day or night', q: 'I open Needs you with my coffee and there are four things to decide. That is it.' },
-  { where: 'Dental clinic · Bristol', t: 'A front desk that rebooks by text', d: 'Patients moving appointments used to mean phone tag. Now they text, the AI offers open slots, and the edited reply is saved as a template for next time.', stat: '3 of 4', statL: 'rebookings handled without staff', q: 'Reception answers the phone for people who need us, not for diary changes.' },
-  { where: 'Plumbing and heating · Manchester', t: 'Calm complaint replies, backed by the terms', d: 'Disputes over callout fees took hours of back and forth. The AI drafts a reply from the company terms and shows the clause it used, ready to approve.', stat: '1 tap', statL: 'to check the clause behind a reply', q: 'I can see exactly which part of our terms it quoted before anything goes out.' },
+  { where: 'Construction · Leeds', t: 'A builder who stopped losing evening enquiries', d: 'Most quote requests came in on WhatsApp after 7pm, when the team was off site. The AI now replies straight away and books the site visit from the chat.', stat: 2, pre: '', suf: ' min', statL: 'typical first reply, day or night', q: 'I open Needs you with my coffee and there are four things to decide. That is it.' },
+  { where: 'Dental clinic · Bristol', t: 'A front desk that rebooks by text', d: 'Patients moving appointments used to mean phone tag. Now they text, the AI offers open slots, and the edited reply is saved as a template for next time.', stat: 3, pre: '', suf: ' of 4', statL: 'rebookings handled without staff', q: 'Reception answers the phone for people who need us, not for diary changes.' },
+  { where: 'Plumbing and heating · Manchester', t: 'Calm complaint replies, backed by the terms', d: 'Disputes over callout fees took hours of back and forth. The AI drafts a reply from the company terms and shows the clause it used, ready to approve.', stat: 1, pre: '', suf: ' tap', statL: 'to check the clause behind a reply', q: 'I can see exactly which part of our terms it quoted before anything goes out.' },
 ];
 
 const SECURITY = [
@@ -47,9 +60,9 @@ const SECURITY = [
 ];
 
 const PLANS = [
-  { name: 'Solo', price: '£49', feats: ['1 user', 'WhatsApp and email', 'AI replies and Shadow mode', 'Needs you and Inbox'] },
-  { name: 'Team', price: '£129', feats: ['Up to 5 users', 'WhatsApp, email and SMS', 'Delegate and follow ups', 'Saved templates and CSV import'], featured: true },
-  { name: 'Business', price: '£299', feats: ['Up to 15 users', 'Several accounts per channel', 'Custom stages and audit export', 'Priority support'] },
+  { name: 'Solo', price: 49, feats: ['1 user', 'WhatsApp and email', 'AI replies and Shadow mode', 'Needs you and Inbox'] },
+  { name: 'Team', price: 129, feats: ['Up to 5 users', 'WhatsApp, email and SMS', 'Delegate and follow ups', 'Saved templates and CSV import'], featured: true },
+  { name: 'Business', price: 299, feats: ['Up to 15 users', 'Several accounts per channel', 'Custom stages and audit export', 'Priority support'] },
 ];
 
 export default function Home() {
@@ -57,6 +70,7 @@ export default function Home() {
   return (
     <div className="page">
       <RevealController />
+      <PageEffects />
 
       <header className="site-header">
         <div className="wrap" style={{ minHeight: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
@@ -70,22 +84,24 @@ export default function Home() {
             <a href="#usecases" className="nav-link">Use cases</a>
             <a href="#stories" className="nav-link">Case studies</a>
             <a href="#pricing" className="nav-link">Pricing</a>
-            <a href="#demo" className="btn btn-primary" style={{ height: 40, padding: '0 16px' }}>Book a demo</a>
+            <a href="#demo" data-magnetic className="btn btn-primary" style={{ height: 40, padding: '0 16px' }}>Book a demo</a>
           </nav>
         </div>
       </header>
 
       <main>
-        <section id="top" className="wrap" style={{ paddingTop: 72, paddingBottom: 88, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,460px),1fr))', gap: 56, alignItems: 'center' }}>
+        <div style={{ position: 'relative', overflow: 'hidden' }}>
+        <HeroField />
+        <section id="top" className="wrap" style={{ position: 'relative', zIndex: 1, paddingTop: 72, paddingBottom: 88, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,460px),1fr))', gap: 56, alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
             <span data-reveal="0" style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 8, height: 30, padding: '0 12px', borderRadius: 999, background: '#E2F2F4', color: '#0B7282', fontSize: 14, fontWeight: 600 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#0B7282', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }}><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" /></svg>
               AI front desk for UK small businesses
             </span>
-            <h1 data-reveal="80" style={{ margin: 0, fontSize: 'clamp(44px,6vw,76px)', lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}>Every enquiry answered, day and night.</h1>
+            <h1 className="hero-h1" style={{ margin: 0, fontSize: 'clamp(44px,6vw,76px)', lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text="Every enquiry answered, day and night." delay={2} /></h1>
             <p data-reveal="160" style={{ margin: 0, fontSize: 20, lineHeight: '30px', color: '#4B463D', maxWidth: 520, textWrap: 'pretty' }}>24x7 Automation brings WhatsApp, email and SMS into one inbox, replies in your voice, and drafts answers from your own business terms. You only step in when a decision needs you.</p>
             <div data-reveal="240" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <a href="#demo" className="btn btn-primary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>Book a demo <Arrow /></a>
+              <a href="#demo" data-magnetic className="btn btn-primary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>Book a demo <Arrow /></a>
               <a href="#how" className="btn btn-secondary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>See how it works</a>
             </div>
             <div data-reveal="320" style={{ display: 'flex', gap: 20, flexWrap: 'wrap', fontSize: 15, color: '#6D675C' }}>
@@ -96,8 +112,9 @@ export default function Home() {
           </div>
           <div data-reveal="200" style={{ minWidth: 0 }}><HeroStream /></div>
         </section>
+        </div>
 
-        <div style={{ borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1', background: '#FFFFFF', overflow: 'hidden', padding: '18px 0' }} aria-hidden="true">
+        <div style={{ borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1', background: '#FFFFFF', overflow: 'hidden', padding: '18px 0' }} className="marquee-wrap" aria-hidden="true">
           <div className="marquee" style={{ display: 'flex', gap: 48, width: 'max-content', fontSize: 20, fontWeight: 600, color: '#4B463D', whiteSpace: 'nowrap' }}>
             {marquee.map((m, i) => (
               <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 48 }}>{m}<span style={{ width: 6, height: 6, borderRadius: 999, background: '#0B7282' }} /></span>
@@ -108,11 +125,11 @@ export default function Home() {
         <section id="how" className="wrap" style={{ paddingTop: 112, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 56 }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 720 }}>
             <span className="eyebrow">How it works</span>
-            <h2 className="h2">Set up in an afternoon. Runs every hour after that.</h2>
+            <h2 className="h2"><Split text="Set up in an afternoon. Runs every hour after that." /></h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 24 }}>
             {STEPS.map((s, i) => (
-              <div key={s.n} data-reveal={String(i * 140)} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 18, padding: 28 }}>
+              <div key={s.n} data-reveal={String(i * 140)} className="card spot lift" style={{ display: 'flex', flexDirection: 'column', gap: 18, padding: 28 }}>
                 <span style={{ fontSize: 64, lineHeight: 1, fontWeight: 700, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums' }}>{s.n}</span>
                 <div data-draw="1" style={{ height: 3, borderRadius: 2, background: s.bar }} />
                 <h3 style={{ margin: 0, fontSize: 24, lineHeight: '30px', fontWeight: 700, letterSpacing: '-0.01em' }}>{s.t}</h3>
@@ -125,12 +142,12 @@ export default function Home() {
         <section id="channels" className="wrap" style={{ paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'start' }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <span className="eyebrow">Channels</span>
-            <h2 className="h2">Three channels. One list.</h2>
+            <h2 className="h2"><Split text="Three channels. One list." /></h2>
             <p className="lead" style={{ maxWidth: 440 }}>Each channel keeps its own colour everywhere in the app, so you always know where a customer wrote from and where the reply will go.</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {CHANNELS.map((c, i) => (
-              <div key={c.name} data-reveal={String(i * 100)} className="card lift" style={{ display: 'flex', gap: 18, alignItems: 'flex-start', padding: 22 }}>
+              <div key={c.name} data-reveal={String(i * 100)} className="card lift spot" style={{ display: 'flex', gap: 18, alignItems: 'flex-start', padding: 22 }}>
                 <span style={{ width: 48, height: 48, borderRadius: 10, background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>{c.icon}</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: c.c }}>{c.name}</h3>
@@ -145,7 +162,7 @@ export default function Home() {
           <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
             <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 760 }}>
               <span className="eyebrow">Industries</span>
-              <h2 className="h2">Built around how your trade actually works.</h2>
+              <h2 className="h2"><Split text="Built around how your trade actually works." /></h2>
               <p className="lead">Choose your industry and the stages, wording and follow ups match it. Pick one below to see it run.</p>
             </div>
             <Industries />
@@ -156,7 +173,7 @@ export default function Home() {
           <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
             <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 760 }}>
               <span className="eyebrow" style={{ color: '#62C6D3' }}>Use cases</span>
-              <h2 className="h2" style={{ color: '#EEEAE2' }}>What it handles while you are on the job.</h2>
+              <h2 className="h2" style={{ color: '#EEEAE2' }}><Split text="What it handles while you are on the job." /></h2>
             </div>
             <UseCases />
           </div>
@@ -166,13 +183,13 @@ export default function Home() {
           <div data-reveal="0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 720 }}>
               <span className="eyebrow">Case studies</span>
-              <h2 className="h2">Small teams, answered faster.</h2>
+              <h2 className="h2"><Split text="Small teams, answered faster." /></h2>
             </div>
             <span className="sample-tag">Sample stories for layout. Real customers to follow.</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))', gap: 24 }}>
             {STORIES.map((s, i) => (
-              <article key={s.t} data-reveal={String(i * 120)} className="card lift lift-4" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 28, borderRadius: 14 }}>
+              <article key={s.t} data-reveal={String(i * 120)} className="card lift lift-4 spot" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 28, borderRadius: 14 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: '#6D675C' }}>{s.where}</span>
                   <span style={{ fontSize: 13, fontWeight: 600, color: '#9A5B00' }}>Sample</span>
@@ -180,7 +197,7 @@ export default function Home() {
                 <h3 style={{ margin: 0, fontSize: 24, lineHeight: '30px', fontWeight: 700, letterSpacing: '-0.01em' }}>{s.t}</h3>
                 <p style={{ margin: 0, fontSize: 16, lineHeight: '24px', color: '#4B463D', textWrap: 'pretty' }}>{s.d}</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 18, borderTop: '1px solid #E0DBD1' }}>
-                  <span style={{ fontSize: 44, lineHeight: 1, fontWeight: 700, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{s.stat}</span>
+                  <span style={{ fontSize: 44, lineHeight: 1, fontWeight: 700, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}><CountUp to={s.stat} prefix={s.pre} suffix={s.suf} ms={900} /></span>
                   <span style={{ fontSize: 15, color: '#6D675C' }}>{s.statL}</span>
                 </div>
                 <p style={{ margin: 0, fontSize: 16, lineHeight: '24px', fontStyle: 'italic', color: '#17150F' }}>&ldquo;{s.q}&rdquo;</p>
@@ -193,7 +210,7 @@ export default function Home() {
           <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48 }}>
             <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <span className="eyebrow">Security and data</span>
-              <h2 className="h2">You stay in control of every reply.</h2>
+              <h2 className="h2"><Split text="You stay in control of every reply." /></h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))', gap: '28px 32px' }}>
               {SECURITY.map((s, i) => (
@@ -210,7 +227,7 @@ export default function Home() {
           <div data-reveal="0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 720 }}>
               <span className="eyebrow">Pricing</span>
-              <h2 className="h2">Monthly, by Direct Debit.</h2>
+              <h2 className="h2"><Split text="Monthly, by Direct Debit." /></h2>
             </div>
             <span className="sample-tag">Indicative prices, to be confirmed</span>
           </div>
@@ -218,13 +235,13 @@ export default function Home() {
             {PLANS.map((p, i) => {
               const f = p.featured;
               return (
-                <div key={p.name} data-reveal={String(i * 120)} style={{ display: 'flex', flexDirection: 'column', gap: 22, padding: 30, borderRadius: 14, background: f ? '#17150F' : '#FFFFFF', color: f ? '#EEEAE2' : undefined, border: `1px solid ${f ? '#17150F' : '#E0DBD1'}` }}>
+                <div key={p.name} data-reveal={String(i * 120)} className={`spot tilt${f ? ' spot-dark' : ''}`} data-tilt style={{ display: 'flex', flexDirection: 'column', gap: 22, padding: 30, borderRadius: 14, background: f ? '#17150F' : '#FFFFFF', color: f ? '#EEEAE2' : undefined, border: `1px solid ${f ? '#17150F' : '#E0DBD1'}` }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                     <h3 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: f ? '#FFFFFF' : undefined }}>{p.name}</h3>
                     {f ? <span style={{ display: 'inline-flex', alignItems: 'center', height: 26, padding: '0 10px', borderRadius: 999, background: '#12303A', color: '#62C6D3', fontSize: 13, fontWeight: 600 }}>Most chosen</span> : null}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                    <span style={{ fontSize: 52, lineHeight: 1, fontWeight: 700, letterSpacing: '-0.03em', color: f ? '#FFFFFF' : undefined }}>{p.price}</span>
+                    <span style={{ fontSize: 52, lineHeight: 1, fontWeight: 700, letterSpacing: '-0.03em', color: f ? '#FFFFFF' : undefined, fontVariantNumeric: 'tabular-nums' }}><CountUp to={p.price} prefix="£" /></span>
                     <span style={{ fontSize: 16, color: f ? '#A29B8F' : '#6D675C' }}>per month + VAT</span>
                   </div>
                   <div className="checks" style={{ color: f ? '#CBC5BA' : '#4B463D', ['--tick' as string]: f ? '#93C47F' : '#3B6E2A' }}>
@@ -240,14 +257,14 @@ export default function Home() {
 
         <section id="faq" style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
           <div style={{ maxWidth: 900, margin: '0 auto', padding: '112px 24px', display: 'flex', flexDirection: 'column', gap: 40 }}>
-            <h2 data-reveal="0" className="h2">Questions</h2>
+            <h2 data-reveal="0" className="h2"><Split text="Questions" /></h2>
             <Faq />
           </div>
         </section>
 
         <section id="demo" className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap: 56, alignItems: 'start' }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <h2 style={{ margin: 0, fontSize: 'clamp(40px,5vw,64px)', lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}>See it answer your own enquiries.</h2>
+            <h2 style={{ margin: 0, fontSize: 'clamp(40px,5vw,64px)', lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text="See it answer your own enquiries." /></h2>
             <p style={{ margin: 0, fontSize: 19, lineHeight: '29px', color: '#4B463D', maxWidth: 460, textWrap: 'pretty' }}>A 20 minute call. We set it up with your industry stages and a few of your real questions, so you see replies in your own words.</p>
           </div>
           <div data-reveal="120" style={{ padding: 32, borderRadius: 14, background: '#FFFFFF', border: '1px solid #E0DBD1', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)' }}>
