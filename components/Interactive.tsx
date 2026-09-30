@@ -2,7 +2,17 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { CH, FAQ, IND, UC } from './data';
+import Image from 'next/image';
 import UseCaseDemo from './UseCaseDemo';
+import builderImg from '@/public/images/builder-site.webp';
+import plumberImg from '@/public/images/plumber.webp';
+import salonImg from '@/public/images/salon.webp';
+
+const PHOTOS = {
+  builder: { src: builderImg, alt: 'Site manager checking an enquiry on his phone on a building site', pos: '50% 30%' },
+  plumber: { src: plumberImg, alt: 'Plumber in a customer kitchen showing a confirmed appointment on his phone', pos: '50% 30%' },
+  salon: { src: salonImg, alt: 'Salon counter with a phone showing a new booking message beside styling tools', pos: '50% 60%' },
+};
 import { Dots, Enter, Icon, reducedMotion } from './motion';
 
 /** Fades sections up as they scroll into view and draws step lines. Everything shows within 1.5s regardless. */
@@ -58,6 +68,11 @@ export function Industries() {
       </div>
       <div data-reveal="160" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: 24 }}>
         <Enter key={ind} from="translateY(12px) scale(.985)" d={350} style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 28, borderRadius: 14, background: '#F6F4EF', border: '1px solid #E0DBD1', minHeight: 300 }}>
+          {cur.photo ? (
+            <div className="ind-photo">
+              <Image src={PHOTOS[cur.photo].src} alt={PHOTOS[cur.photo].alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: PHOTOS[cur.photo].pos }} />
+            </div>
+          ) : null}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 15, fontWeight: 600, color: '#4B463D' }}>{cur.who}</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', height: 26, padding: '0 10px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: c.t, color: c.c }}>{c.l}</span>

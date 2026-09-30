@@ -4,6 +4,10 @@ import HeroStream from '@/components/HeroStream';
 import { DemoForm, Faq, Industries, RevealController, UseCases } from '@/components/Interactive';
 import { IND } from '@/components/data';
 import { CountUp, HeroField, PageEffects } from '@/components/Effects';
+import OnTheJob from '@/components/OnTheJob';
+import Image from 'next/image';
+import flatlayImg from '@/public/images/inbox-flatlay.webp';
+import approveImg from '@/public/images/approve.webp';
 
 /** Splits a heading into words that rise into view when their section is revealed. */
 function Split({ text, delay = 0 }: { text: string; delay?: number }) {
@@ -122,6 +126,10 @@ export default function Home() {
           </div>
         </div>
 
+        <section className="wrap" style={{ paddingTop: 96 }} aria-label="On the job">
+          <OnTheJob />
+        </section>
+
         <section id="how" className="wrap" style={{ paddingTop: 112, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 56 }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 720 }}>
             <span className="eyebrow">How it works</span>
@@ -144,6 +152,12 @@ export default function Home() {
             <span className="eyebrow">Channels</span>
             <h2 className="h2"><Split text="Three channels. One list." /></h2>
             <p className="lead" style={{ maxWidth: 440 }}>Each channel keeps its own colour everywhere in the app, so you always know where a customer wrote from and where the reply will go.</p>
+            <div className="photo img-reveal" data-reveal="120" style={{ aspectRatio: '4 / 3', marginTop: 12 }}>
+              <div data-parallax="0.06" className="photo-inner">
+                <Image src={flatlayImg} alt="Phone showing a unified inbox on a wooden desk beside a coffee and a notebook" fill placeholder="blur" sizes="(max-width: 800px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: '45% 45%' }} />
+              </div>
+              <span className="photo-chip"><span style={{ width: 8, height: 8, borderRadius: 999, background: '#0B7282' }} />Morning check: 4 things need you</span>
+            </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {CHANNELS.map((c, i) => (
@@ -211,6 +225,12 @@ export default function Home() {
             <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <span className="eyebrow">Security and data</span>
               <h2 className="h2"><Split text="You stay in control of every reply." /></h2>
+              <div className="photo img-reveal" data-reveal="120" style={{ aspectRatio: '16 / 10', marginTop: 12 }}>
+                <div data-parallax="0.06" className="photo-inner">
+                  <Image src={approveImg} alt="Hands holding a phone and tapping Approve on a request" fill placeholder="blur" sizes="(max-width: 800px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: '55% 50%' }} />
+                </div>
+                <span className="photo-chip"><svg width="14" height="14" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#0B7282', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round' }}><path d="M20 6 9 17l-5-5" /></svg>Shadow mode: nothing sends until you approve</span>
+              </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))', gap: '28px 32px' }}>
               {SECURITY.map((s, i) => (

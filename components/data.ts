@@ -6,13 +6,13 @@ export const CH: Record<ChannelKey, { l: string; c: string; t: string }> = {
   sms: { l: 'SMS', c: '#7A4A9A', t: '#F2EAF7' },
 };
 
-export type Industry = { name: string; ch: ChannelKey; who: string; ask: string; reply: string; stages: string[] };
+export type Industry = { name: string; ch: ChannelKey; who: string; ask: string; reply: string; stages: string[]; photo?: 'builder' | 'plumber' | 'salon' };
 
 export const IND: Industry[] = [
-  { name: 'Construction and trades', ch: 'wa', who: 'Sarah, Leeds', ask: 'Can you quote for a rear extension, about 4m by 5m?', reply: 'Thanks Sarah. We offer a free site visit first. Would Thursday at 10:00 or Friday at 14:00 suit you?', stages: ['New', 'Qualified', 'Site visit', 'Quoted', 'Won', 'Lost'] },
-  { name: 'Home services', ch: 'wa', who: 'Priya, Salford', ask: 'Boiler is making a banging noise. Can someone come today?', reply: 'Sorry to hear that, Priya. We have an engineer free at 15:00 today. Our callout fee is £65 and covers the first hour.', stages: ['New', 'Qualified', 'Booked', 'Job done', 'Invoiced', 'Lost'] },
+  { name: 'Construction and trades', ch: 'wa', who: 'Sarah, Leeds', ask: 'Can you quote for a rear extension, about 4m by 5m?', reply: 'Thanks Sarah. We offer a free site visit first. Would Thursday at 10:00 or Friday at 14:00 suit you?', stages: ['New', 'Qualified', 'Site visit', 'Quoted', 'Won', 'Lost'], photo: 'builder' },
+  { name: 'Home services', ch: 'wa', who: 'Priya, Salford', ask: 'Boiler is making a banging noise. Can someone come today?', reply: 'Sorry to hear that, Priya. We have an engineer free at 15:00 today. Our callout fee is £65 and covers the first hour.', stages: ['New', 'Qualified', 'Booked', 'Job done', 'Invoiced', 'Lost'], photo: 'plumber' },
   { name: 'Clinics and dental', ch: 'sms', who: 'Patient, Bristol', ask: 'Do you have a hygienist appointment this week?', reply: 'We have Wednesday at 09:15 or Friday at 10:30. Reply 1 or 2 and we will book it.', stages: ['New', 'Triage', 'Booked', 'Attended', 'Recall', 'Lost'] },
-  { name: 'Salons and beauty', ch: 'wa', who: 'Chloe, Brighton', ask: 'How much for a full head of highlights?', reply: 'From £95 depending on length. A quick consultation first is free. Would Saturday at 11:00 work?', stages: ['New', 'Consultation', 'Booked', 'Visited', 'Rebook', 'Lost'] },
+  { name: 'Salons and beauty', ch: 'wa', who: 'Chloe, Brighton', ask: 'How much for a full head of highlights?', reply: 'From £95 depending on length. A quick consultation first is free. Would Saturday at 11:00 work?', stages: ['New', 'Consultation', 'Booked', 'Visited', 'Rebook', 'Lost'], photo: 'salon' },
   { name: 'Real estate', ch: 'email', who: 'Daniel, Reading', ask: 'Is the 3 bed on Elm Road still available to view?', reply: 'Yes, it is. Viewings are open Tuesday and Thursday evenings. Shall I book you in for Tuesday at 18:00?', stages: ['New', 'Qualified', 'Viewing', 'Offer', 'Agreed', 'Lost'] },
   { name: 'Legal and accounting', ch: 'email', who: 'Helen, Cardiff', ask: 'I need help with my self assessment this year.', reply: 'Happy to help, Helen. Our fixed fee starts at £250. I can arrange a 15 minute call to check what you need.', stages: ['New', 'Checks', 'Consultation', 'Engaged', 'Closed', 'Lost'] },
   { name: 'Restaurants and hospitality', ch: 'wa', who: 'Ravi, Birmingham', ask: 'Table for 14 on Saturday the 17th?', reply: 'We can seat 14 at 19:30. Groups over 10 need a £10 per head deposit. Shall I hold it for you?', stages: ['New', 'Enquiry', 'Held', 'Confirmed', 'Seated', 'Lost'] },

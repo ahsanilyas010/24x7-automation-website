@@ -18,6 +18,7 @@ export function PageEffects() {
     const RM = reducedMotion();
     const bar = document.getElementById('scroll-progress');
     const header = document.querySelector('.site-header');
+    const para = RM ? [] : Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'));
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -25,6 +26,13 @@ export function PageEffects() {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         if (bar) bar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
         header?.classList.toggle('scrolled', window.scrollY > 8);
+        const vh = window.innerHeight;
+        for (const el of para) {
+          const r = el.parentElement!.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > vh) continue;
+          const off = (r.top + r.height / 2 - vh / 2) * parseFloat(el.dataset.parallax || '0.08');
+          el.style.transform = `translate3d(0, ${off.toFixed(1)}px, 0)`;
+        }
       });
     };
     onScroll();
