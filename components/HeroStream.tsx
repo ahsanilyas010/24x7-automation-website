@@ -1,28 +1,37 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { CH, ChannelKey, HERO, HeroItem, OUT } from './data';
-import { ChannelPill, Dots, Enter, Icon, Pill, reducedMotion } from './motion';
+import { CH, CH_ORDER, ChannelKey, HERO, HeroItem } from './data';
+import { Dots, Icon, Pill, reducedMotion } from './motion';
 
 const W = 560;
 const H = 480;
-const LANES: Record<ChannelKey, number> = { wa: 96, email: 226, sms: 356 };
-const IN = { x: 262, y: 118 };
+const LANE_Y = (i: number) => 92 + i * 64;
+const SRC_W = 150;
+const PANEL_X = 262;
+const HUB_X = 206;
+const BASE: Record<ChannelKey, number> = { wa: 2, email: 3, sms: 1, fb: 1, ig: 1, li: 0 };
 
-type Item = { id: number; m: HeroItem; st: 0 | 1 };
+type Last = { m: HeroItem; pending: boolean };
 
-/** Messages travel from WhatsApp, email and SMS into one inbox, where the AI drafts and resolves each one. */
+/**
+ * Messages from six channels travel into the app, and the AI files each one into its own folder on the dashboard.
+ * Nothing piles up in a single inbox: each channel keeps a count, and a quiet "no pings" footer says why.
+ */
 export default function HeroStream() {
   const wrap = useRef<HTMLDivElement>(null);
-  const [sc, setSc] = useState(1);
-  const [items, setItems] = useState<Item[]>([]);
-  const [act, setAct] = useState<ChannelKey | null>(null);
-  const [count, setCount] = useState(0);
-  const [clock, setClock] = useState('23:40');
+  const panel = useRef<HTMLDivElement>(null);
   const dotG = useRef<SVGGElement>(null);
   const dotA = useRef<SVGCircleElement>(null);
   const dotB = useRef<SVGCircleElement>(null);
-  const inbox = useRef<HTMLDivElement>(null);
+  const [sc, setSc] = useState(1);
+  const [counts, setCounts] = useState<Record<ChannelKey, number>>(BASE);
+  const [last, setLast] = useState<Partial<Record<ChannelKey, Last>>>({});
+  const [flash, setFlash] = useState<ChannelKey | null>(null);
+  const [hub, setHub] = useState<ChannelKey | null>(null);
+  const [handled, setHandled] = useState(0);
+  const [needs, setNeeds] = useState(0);
+  const [clock, setClock] = useState('23:40');
 
   useEffect(() => {
     const el = wrap.current;
@@ -45,16 +54,23 @@ export default function HeroStream() {
     let alive = true, i = 0, raf = 0;
     const timers: ReturnType<typeof setTimeout>[] = [];
     const later = (fn: () => void, ms: number) => timers.push(setTimeout(fn, ms));
-    const bez = (p: number, a: number, b: number, c: number, d: number) => { const u = 1 - p; return u * u * u * a + 3 * u * u * p * b + 3 * u * p * p * c + p * p * p * d; };
     const land = (m: HeroItem, id: number) => {
-      setItems((prev) => [{ id, m, st: 0 as const }, ...prev].slice(0, 4));
+      if (id > 0 && id % HERO.length === 0) { setCounts(BASE); setLast({}); setHandled(0); setNeeds(0); }
+      setCounts((c) => ({ ...c, [m.ch]: c[m.ch] + 1 }));
+      setLast((l) => ({ ...l, [m.ch]: { m, pending: true } }));
+      setFlash(m.ch);
       setClock(m.t);
-      const r = inbox.current?.getBoundingClientRect();
-      if (r) window.dispatchEvent(new CustomEvent('hero-land', { detail: { x: r.left + 8, y: r.top + 106 * (r.height / H), c: CH[m.ch].c } }));
+      const r = panel.current?.getBoundingClientRect();
+      if (r) {
+        const idx = CH_ORDER.indexOf(m.ch);
+        window.dispatchEvent(new CustomEvent('hero-land', { detail: { x: r.left + 8, y: r.top + LANE_Y(idx) * (r.height / H), c: CH[m.ch].c } }));
+      }
+      later(() => setFlash(null), 900);
       later(() => {
         if (!alive) return;
-        setItems((prev) => prev.map((x) => (x.id === id ? { ...x, st: 1 as const } : x)));
-        setCount((c) => c + 1);
+        setLast((l) => (l[m.ch]?.m === m ? { ...l, [m.ch]: { m, pending: false } } : l));
+        setHandled((n) => n + 1);
+        if (m.o === 'needs') setNeeds((n) => n + 1);
       }, RM ? 0 : 1000);
     };
     const step = () => {
@@ -62,19 +78,19 @@ export default function HeroStream() {
       const m = HERO[i % HERO.length], id = i;
       i++;
       if (RM) { land(m, id); later(step, 2600); return; }
-      const y0 = LANES[m.ch], st = performance.now(), dur = 820, col = CH[m.ch].c;
-      setAct(m.ch);
-      later(() => alive && setAct(null), 300);
+      const lane = CH_ORDER.indexOf(m.ch), y = LANE_Y(lane), st = performance.now(), dur = 900, col = CH[m.ch].c;
       dotA.current?.setAttribute('fill', col);
       dotB.current?.setAttribute('fill', col);
       if (dotG.current) dotG.current.style.opacity = '1';
+      let hubbed = false;
       const fr = (now: number) => {
         if (!alive) return;
         const p = Math.min(1, (now - st) / dur), e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-        const x = bez(e, 170, 220, 220, IN.x), y = bez(e, y0, y0, IN.y, IN.y);
+        const x = SRC_W + (PANEL_X - SRC_W) * e;
         for (const d of [dotA.current, dotB.current]) { d?.setAttribute('cx', String(x)); d?.setAttribute('cy', String(y)); }
+        if (!hubbed && x >= HUB_X) { hubbed = true; setHub(m.ch); later(() => setHub(null), 350); }
         if (p < 1) raf = requestAnimationFrame(fr);
-        else { if (dotG.current) dotG.current.style.opacity = '0'; land(m, id); later(step, 1900); }
+        else { if (dotG.current) dotG.current.style.opacity = '0'; land(m, id); later(step, 1500); }
       };
       raf = requestAnimationFrame(fr);
     };
@@ -82,65 +98,63 @@ export default function HeroStream() {
     return () => { alive = false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); };
   }, []);
 
-  const RM = typeof window !== 'undefined' && reducedMotion();
-
   return (
-    <div ref={wrap} style={{ width: '100%', height: H * sc, minHeight: 200 }} aria-label="Messages from WhatsApp, email and SMS arriving in one inbox" role="img">
+    <div ref={wrap} style={{ width: '100%', height: H * sc, minHeight: 200 }} aria-label="Messages from WhatsApp, email, SMS, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
       <div style={{ width: W, height: H, transform: `scale(${sc})`, transformOrigin: 'top left', position: 'relative', color: '#17150F' }}>
-        <div style={{ position: 'absolute', left: 0, top: 0, fontSize: 13, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Incoming</div>
+        <div style={{ position: 'absolute', left: 0, top: 0, fontSize: 13, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Arriving</div>
         <svg width={W} height={H} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
-          {(Object.keys(LANES) as ChannelKey[]).map((k) => {
-            const y = LANES[k];
-            return <path key={k} d={`M170 ${y} C220 ${y} 220 ${IN.y} ${IN.x} ${IN.y}`} fill="none" stroke={CH[k].c} strokeOpacity={0.35} strokeWidth={2} strokeDasharray="4 6" />;
+          {CH_ORDER.map((k, i) => {
+            const y = LANE_Y(i), on = hub === k;
+            return (
+              <g key={k}>
+                <line x1={SRC_W} y1={y} x2={PANEL_X} y2={y} stroke={CH[k].c} strokeOpacity={0.35} strokeWidth={2} strokeDasharray="4 6" />
+                <circle cx={HUB_X} cy={y} r={on ? 12 : 9} fill="#FFFFFF" stroke={on ? CH[k].c : '#C9C2B6'} strokeWidth={2} style={{ transition: 'all 150ms ease' }} />
+                <circle cx={HUB_X} cy={y} r={3} fill={on ? CH[k].c : '#0B7282'} />
+              </g>
+            );
           })}
+          <text x={HUB_X} y={44} textAnchor="middle" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', fill: '#0B7282' }}>SORTED BY AI</text>
           <g ref={dotG} style={{ opacity: 0 }}>
-            <circle ref={dotA} cx={170} cy={96} r={12} fill="#0F7A45" opacity={0.18} />
-            <circle ref={dotB} cx={170} cy={96} r={6} fill="#0F7A45" />
+            <circle ref={dotA} cx={SRC_W} cy={LANE_Y(0)} r={12} fill="#0F7A45" opacity={0.18} />
+            <circle ref={dotB} cx={SRC_W} cy={LANE_Y(0)} r={6} fill="#0F7A45" />
           </g>
         </svg>
-        {(Object.keys(LANES) as ChannelKey[]).map((k) => {
-          const on = act === k, c = CH[k];
+        {CH_ORDER.map((k, i) => {
+          const c = CH[k], on = flash === k;
           return (
-            <div key={k} style={{ position: 'absolute', left: 0, top: LANES[k] - 30, width: 170, height: 60, boxSizing: 'border-box', borderRadius: 12, background: '#FFFFFF', border: '1px solid ' + (on ? c.c : '#E0DBD1'), display: 'flex', alignItems: 'center', gap: 12, padding: '0 14px', transition: 'border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease', transform: on ? 'scale(1.04)' : 'none', boxShadow: on ? '0 0 0 4px ' + c.t : 'none' }}>
-              <span style={{ width: 34, height: 34, borderRadius: 8, background: c.t, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon k={k} s={18} c={c.c} /></span>
-              <span style={{ fontSize: 16, fontWeight: 700, color: c.c }}>{c.l}</span>
+            <div key={k} style={{ position: 'absolute', left: 0, top: LANE_Y(i) - 24, width: SRC_W, height: 48, boxSizing: 'border-box', borderRadius: 12, background: '#FFFFFF', border: '1px solid ' + (on ? c.c : '#E0DBD1'), display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px', transition: 'border-color 150ms ease, box-shadow 150ms ease', boxShadow: on ? '0 0 0 4px ' + c.t : 'none' }}>
+              <span style={{ width: 30, height: 30, borderRadius: 8, background: c.t, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon k={k} s={16} c={c.c} /></span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: c.c }}>{c.l}</span>
             </div>
           );
         })}
-        <div style={{ position: 'absolute', left: 0, top: 414, width: 170, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <span style={{ fontSize: 13, color: '#6D675C', fontWeight: 500 }}>Handled at</span>
-          <span style={{ fontSize: 40, lineHeight: '44px', fontWeight: 700, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{clock}</span>
-        </div>
-        <div ref={inbox} style={{ position: 'absolute', left: IN.x, top: 0, right: 0, bottom: 0, borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden' }}>
+        <div ref={panel} style={{ position: 'absolute', left: PANEL_X, top: 0, right: 0, bottom: 0, borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden' }}>
           <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', borderBottom: '1px solid #E0DBD1', background: '#FFFFFF' }}>
-            <span style={{ fontSize: 17, fontWeight: 700 }}>Inbox</span>
+            <span style={{ fontSize: 16, fontWeight: 700 }}>Dashboard</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Pill t="AI on" fg="#0B7282" bg="#E2F2F4" icon="spark" />
-              <span style={{ fontSize: 13, color: '#6D675C', fontVariantNumeric: 'tabular-nums' }}>{count} handled</span>
+              <span style={{ fontSize: 13, color: '#6D675C', fontVariantNumeric: 'tabular-nums' }}>{clock}</span>
             </span>
           </div>
-          {items.map((x, idx) => {
-            const o = OUT[x.m.o];
+          {CH_ORDER.map((k, i) => {
+            const c = CH[k], l = last[k], on = flash === k;
             return (
-              <div key={x.id} style={{ position: 'absolute', left: 14, right: 14, top: 66 + idx * 92, transition: RM ? 'none' : 'top 250ms cubic-bezier(.2,.8,.2,1), opacity 250ms ease', opacity: idx === 3 ? 0.45 : 1 }}>
-                <Enter from="translateX(-24px) scale(.96)" style={{ height: 80, boxSizing: 'border-box', borderRadius: 10, background: '#FFFFFF', border: '1px solid #E0DBD1', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <ChannelPill ch={x.m.ch} />
-                    <span style={{ fontSize: 15, fontWeight: 700, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{x.m.who}</span>
-                    <span style={{ fontSize: 13, color: '#6D675C', fontVariantNumeric: 'tabular-nums' }}>{x.m.t}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: 14, color: '#4B463D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{x.m.txt}</span>
-                    {x.st === 0 ? (
-                      <span key="r" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#0B7282', flex: 'none' }}><Dots />Drafting</span>
-                    ) : (
-                      <Enter key="d" from="scale(.8)" d={250}><Pill t={x.m.ol} fg={o[0]} bg={o[1]} icon={x.m.o === 'ai' ? 'spark' : null} /></Enter>
-                    )}
-                  </div>
-                </Enter>
+              <div key={k} style={{ position: 'absolute', left: 10, right: 10, top: LANE_Y(i) - 26, height: 52, boxSizing: 'border-box', borderRadius: 10, background: on ? c.t : '#FFFFFF', border: '1px solid ' + (on ? c.c : '#E0DBD1'), padding: '0 10px', display: 'flex', alignItems: 'center', gap: 10, transition: 'background 200ms ease, border-color 200ms ease' }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, background: c.t, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon k={k} s={15} c={c.c} /></span>
+                <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: c.c, lineHeight: '17px' }}>{c.l}</span>
+                  <span style={{ fontSize: 12, color: '#4B463D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '16px' }}>
+                    {l ? (l.pending ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#0B7282', fontWeight: 600 }}><Dots />Drafting</span> : `${l.m.ol} · ${l.m.who}`) : 'All caught up'}
+                  </span>
+                </span>
+                <span key={counts[k]} className="count-pop" style={{ minWidth: 28, height: 28, padding: '0 8px', borderRadius: 999, background: c.c, color: '#FFFFFF', fontSize: 14, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontVariantNumeric: 'tabular-nums' }}>{counts[k]}</span>
               </div>
             );
           })}
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 38, borderTop: '1px solid #E0DBD1', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', fontSize: 12.5, fontWeight: 600, color: '#4B463D' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />No phone pings</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{handled} handled · <span style={{ color: '#9A5B00' }}>{needs} need you</span></span>
+          </div>
         </div>
       </div>
     </div>
