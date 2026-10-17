@@ -1,36 +1,18 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { CH, FAQ, IND, UC } from './data';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { COUNTRIES, CH, FAQ, IND, UC } from './data';
 import Image from 'next/image';
 import UseCaseDemo from './UseCaseDemo';
-import builderImg from '@/public/images/builder-site.webp';
-import plumberImg from '@/public/images/plumber.webp';
-import salonImg from '@/public/images/salon.webp';
-import dentalImg from '@/public/images/dental.webp';
-import realEstateImg from '@/public/images/real-estate.webp';
-import legalImg from '@/public/images/legal.webp';
-import restaurantImg from '@/public/images/restaurant.webp';
-import garageImg from '@/public/images/garage.webp';
-import tutorImg from '@/public/images/tutor.webp';
-import fitnessImg from '@/public/images/fitness.webp';
-
-const PHOTOS = {
-  builder: { src: builderImg, alt: 'Site manager checking an enquiry on his phone on a building site', pos: '50% 30%' },
-  plumber: { src: plumberImg, alt: 'Plumber in a customer kitchen showing a confirmed appointment on his phone', pos: '50% 30%' },
-  salon: { src: salonImg, alt: 'Salon counter with a phone showing a new booking message beside styling tools', pos: '50% 60%' },
-  dental: { src: dentalImg, alt: 'Dental receptionist at the front desk reading a patient text on her phone', pos: '40% 40%' },
-  realEstate: { src: realEstateImg, alt: 'Estate agent with keys outside a red-brick terraced house checking a viewing request', pos: '50% 35%' },
-  legal: { src: legalImg, alt: 'Accountant at her desk with a laptop and client folder reading an enquiry on her phone', pos: '60% 40%' },
-  restaurant: { src: restaurantImg, alt: 'Restaurant manager at the pass checking a group booking message beside the bookings diary', pos: '50% 45%' },
-  garage: { src: garageImg, alt: 'Mechanic in a garage bay reading a text with a car raised on the ramp behind him', pos: '50% 40%' },
-  tutor: { src: tutorImg, alt: 'Tutor at a kitchen table with workbooks and a laptop replying to a parent', pos: '40% 45%' },
-  fitness: { src: fitnessImg, alt: 'Studio owner checking a class enquiry at the front desk of a reformer studio', pos: '40% 45%' },
-};
+import { PHOTOS } from './photos';
+import { SITE } from '@/lib/site';
 import { Dots, Enter, Icon, reducedMotion } from './motion';
 
 /** Fades sections up as they scroll into view and draws step lines. Everything shows within 1.5s regardless. */
 export function RevealController() {
+  const pathname = usePathname();
   useEffect(() => {
     const root = document.documentElement;
     if (reducedMotion() || !('IntersectionObserver' in window)) { root.classList.remove('reveal-ready'); return; }
@@ -46,7 +28,7 @@ export function RevealController() {
     window.addEventListener('beforeprint', all);
     const safety = setTimeout(all, 1500);
     return () => { io.disconnect(); clearTimeout(safety); window.removeEventListener('scroll', check); window.removeEventListener('beforeprint', all); };
-  }, []);
+  }, [pathname]);
   return null;
 }
 
@@ -54,16 +36,26 @@ export function Industries() {
   const [ind, setInd] = useState(0);
   const [step, setStep] = useState(0);
   const [replied, setReplied] = useState(true);
+  const [auto, setAuto] = useState(true);
   useEffect(() => {
     const iv = setInterval(() => setStep((s) => s + 1), 1400);
     return () => clearInterval(iv);
   }, []);
-  const pick = (i: number) => {
-    if (i === ind) return;
+  const go = (i: number) => {
     setInd(i); setStep(0);
     if (reducedMotion()) return;
     setReplied(false);
     setTimeout(() => setReplied(true), 1100);
+  };
+  // The industry changes by itself until the visitor picks one.
+  useEffect(() => {
+    if (!auto || reducedMotion()) return;
+    const t = setTimeout(() => go((ind + 1) % IND.length), 7000);
+    return () => clearTimeout(t);
+  }, [auto, ind]);
+  const pick = (i: number) => {
+    setAuto(false);
+    if (i !== ind) go(i);
   };
   const cur = IND[ind], c = CH[cur.ch], last = cur.stages.length - 1, act = step % last;
 
@@ -82,11 +74,9 @@ export function Industries() {
       </div>
       <div data-reveal="160" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: 24 }}>
         <Enter key={ind} from="translateY(12px) scale(.985)" d={350} style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 28, borderRadius: 14, background: '#F6F4EF', border: '1px solid #E0DBD1', minHeight: 300 }}>
-          {cur.photo ? (
-            <div className="ind-photo">
-              <Image src={PHOTOS[cur.photo].src} alt={PHOTOS[cur.photo].alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: PHOTOS[cur.photo].pos }} />
-            </div>
-          ) : null}
+          <div className="ind-photo">
+            <Image src={PHOTOS[cur.photo].src} alt={PHOTOS[cur.photo].alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: PHOTOS[cur.photo].pos }} />
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 15, fontWeight: 600, color: '#4B463D' }}>{cur.who}</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', height: 26, padding: '0 10px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: c.t, color: c.c }}>{c.l}</span>
@@ -121,6 +111,7 @@ export function Industries() {
             })}
           </div>
           <span style={{ fontSize: 14, lineHeight: '20px', color: '#A29B8F' }}>Every stage can be renamed, reordered or removed in Settings.</span>
+          <Link href={`/industries/${cur.slug}`} style={{ color: '#62C6D3', fontSize: 15, fontWeight: 600 }}>See how it works for {cur.name.toLowerCase()} &rarr;</Link>
         </div>
       </div>
     </>
@@ -156,11 +147,11 @@ export function UseCases() {
   );
 }
 
-export function Faq() {
+export function Faq({ items = FAQ }: { items?: [string, string][] }) {
   const [open, setOpen] = useState(0);
   return (
     <div data-reveal="80" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid #E0DBD1' }}>
-      {FAQ.map(([q, a], i) => (
+      {items.map(([q, a], i) => (
         <div key={q} style={{ borderBottom: '1px solid #E0DBD1' }}>
           <button onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i} className="faq-btn">
             <span>{q}</span>
@@ -175,6 +166,9 @@ export function Faq() {
   );
 }
 
+const TEAM_SIZES = ['1 to 3', '4 to 10', 'More than 10'];
+const EXTRA_INDUSTRIES = ['Distribution, trading and wholesale', 'Manufacturing', 'Agency', 'Retail', 'Other'];
+
 export function DemoForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -188,6 +182,8 @@ export function DemoForm() {
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) throw new Error(out.error || 'We could not send your request. Please try again.');
       setSent(true);
+      // Lead captured: hand over to the scheduling page so the visitor can pick a demo slot.
+      if (SITE.calendly) setTimeout(() => window.location.assign(SITE.calendly), 1800);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'We could not send your request. Please try again.');
     } finally {
@@ -201,7 +197,14 @@ export function DemoForm() {
           <svg width="28" height="28" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#3B6E2A', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round' }}><path className="draw-check" d="M20 6 9 17l-5-5" /></svg>
         </span>
         <h3 style={{ margin: 0, fontSize: 26, fontWeight: 700 }}>Thanks, request received.</h3>
-        <p style={{ margin: 0, fontSize: 17, lineHeight: '26px', color: '#4B463D' }} role="status">We will be in touch within one working day to find a time.</p>
+        {SITE.calendly ? (
+          <>
+            <p style={{ margin: 0, fontSize: 17, lineHeight: '26px', color: '#4B463D' }} role="status">Taking you to our calendar so you can choose a time for your demo.</p>
+            <a href={SITE.calendly} className="btn btn-primary" style={{ height: 48, padding: '0 20px', fontSize: 16 }}>Choose a time now</a>
+          </>
+        ) : (
+          <p style={{ margin: 0, fontSize: 17, lineHeight: '26px', color: '#4B463D' }} role="status">We will be in touch within one working day to find a time.</p>
+        )}
       </Enter>
     );
   }
@@ -210,16 +213,25 @@ export function DemoForm() {
       <label className="field">Your name<input required name="name" autoComplete="name" /></label>
       <label className="field">Business name<input required name="business" autoComplete="organization" /></label>
       <label className="field">Industry
-        <select name="industry">{IND.map((x) => <option key={x.name}>{x.name}</option>)}</select>
+        <select name="industry" defaultValue={IND[0].name}>{[...IND.map((x) => x.name), ...EXTRA_INDUSTRIES].map((x) => <option key={x}>{x}</option>)}</select>
       </label>
-      <label className="field">Mobile number<input required name="phone" type="tel" placeholder="07" autoComplete="tel" /></label>
-      <label className="field">Email (optional)<input name="email" type="email" autoComplete="email" /></label>
+      <label className="field">Team size
+        <select name="teamSize" defaultValue={TEAM_SIZES[0]}>{TEAM_SIZES.map((x) => <option key={x}>{x}</option>)}</select>
+      </label>
+      <label className="field">Email<input required name="email" type="email" autoComplete="email" /></label>
+      <label className="field">Phone number<input required name="phone" type="tel" placeholder="+44 7..." autoComplete="tel" /></label>
+      <label className="field">Country
+        <select required name="location" defaultValue="">
+          <option value="" disabled>Select your country</option>
+          {COUNTRIES.map((x) => <option key={x}>{x}</option>)}
+        </select>
+      </label>
       <input type="text" name="company_site" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0 }} />
       {error ? <span role="alert" style={{ fontSize: 15, lineHeight: '22px', color: '#B3261E', background: '#FBEAE8', borderRadius: 8, padding: '10px 12px' }}>{error}</span> : null}
       <button type="submit" disabled={sending} className="btn btn-primary" style={{ height: 52, fontSize: 17, border: 0, cursor: sending ? 'progress' : 'pointer' }}>
         {sending ? <><span className="dots-light"><Dots /></span>Sending</> : 'Book a demo'}
       </button>
-      <span style={{ fontSize: 14, lineHeight: '20px', color: '#6D675C' }}>We reply on WhatsApp or by email within one working day.</span>
+      <span style={{ fontSize: 14, lineHeight: '20px', color: '#6D675C' }}>After you submit you can pick a time that suits you. We reply on WhatsApp or by email.</span>
     </form>
   );
 }

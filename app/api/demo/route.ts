@@ -21,7 +21,9 @@ export async function POST(req: Request) {
   const industry = clean(body.industry, 80);
   const phone = clean(body.phone, 40);
   const email = clean(body.email, 160);
-  if (!name || !business || !phone || !/^[+\d][\d\s()-]{6,}$/.test(phone) || (email && !/^\S+@\S+\.\S+$/.test(email))) {
+  const teamSize = clean(body.teamSize, 40);
+  const location = clean(body.location, 80);
+  if (!name || !business || !location || !phone || !/^[+\d][\d\s()-]{6,}$/.test(phone) || !/^\S+@\S+\.\S+$/.test(email)) {
     return NextResponse.json({ ok: false, error: 'Please check your details and try again.' }, { status: 400 });
   }
 
@@ -32,7 +34,7 @@ export async function POST(req: Request) {
   }
 
   const subject = `Demo request: ${business} (${industry || 'industry not given'})`;
-  const lines = [`Name: ${name}`, `Business: ${business}`, `Industry: ${industry}`, `Mobile: ${phone}`, email ? `Email: ${email}` : '', `Sent: ${new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' })}`].filter(Boolean);
+  const lines = [`Name: ${name}`, `Business: ${business}`, `Industry: ${industry}`, `Team size: ${teamSize}`, `Country: ${location}`, `Mobile: ${phone}`, `Email: ${email}`, `Sent: ${new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' })}`].filter(Boolean);
 
   try {
     let res: Response;
@@ -40,14 +42,14 @@ export async function POST(req: Request) {
       res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: process.env.DEMO_FROM || '24x7 Automation <onboarding@resend.dev>', to: [to], subject, text: lines.join('\n'), ...(email ? { reply_to: email } : {}) }),
+        body: JSON.stringify({ from: process.env.DEMO_FROM || '24x7 Automation <onboarding@resend.dev>', to: [to], subject, text: lines.join('\n'), reply_to: email }),
       });
     } else {
       const site = new URL(req.url).origin;
       res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: site, Referer: `${site}/` },
-        body: JSON.stringify({ _subject: subject, _template: 'table', _captcha: 'false', Name: name, Business: business, Industry: industry, Mobile: phone, ...(email ? { Email: email, _replyto: email } : {}) }),
+        body: JSON.stringify({ _subject: subject, _template: 'table', _captcha: 'false', Name: name, Business: business, Industry: industry, 'Team size': teamSize, Country: location, Mobile: phone, Email: email, _replyto: email }),
       });
     }
     const text = await res.text();

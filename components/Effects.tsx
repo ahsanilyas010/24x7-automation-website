@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { reducedMotion } from './motion';
 
 const finePointer = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -9,11 +10,11 @@ const finePointer = () => typeof window !== 'undefined' && window.matchMedia('(h
  * Page-wide pointer and scroll effects:
  * - thin progress bar along the top
  * - header gains a shadow once the page scrolls
- * - nav link for the section in view is marked current
  * - `.spot` cards get a glow that follows the pointer, `[data-tilt]` cards lean towards it
  * - `[data-magnetic]` buttons drift a little towards the pointer
  */
 export function PageEffects() {
+  const pathname = usePathname();
   useEffect(() => {
     const RM = reducedMotion();
     const bar = document.getElementById('scroll-progress');
@@ -37,18 +38,6 @@ export function PageEffects() {
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Scroll spy
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav-link'));
-    const ids = links.map((a) => a.getAttribute('href')!.slice(1));
-    const spy = new IntersectionObserver(
-      (es) => es.forEach((e) => {
-        if (!e.isIntersecting) return;
-        links.forEach((a) => (a.getAttribute('href') === '#' + e.target.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
-      }),
-      { rootMargin: '-45% 0px -50% 0px' },
-    );
-    ids.forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
 
     const cleanups: (() => void)[] = [];
     if (!RM && finePointer()) {
@@ -78,8 +67,8 @@ export function PageEffects() {
         cleanups.push(() => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); });
       });
     }
-    return () => { window.removeEventListener('scroll', onScroll); spy.disconnect(); cleanups.forEach((f) => f()); cancelAnimationFrame(raf); };
-  }, []);
+    return () => { window.removeEventListener('scroll', onScroll); cleanups.forEach((f) => f()); cancelAnimationFrame(raf); };
+  }, [pathname]);
   return <div id="scroll-progress" aria-hidden="true" />;
 }
 
