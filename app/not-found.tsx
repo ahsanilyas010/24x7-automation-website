@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: 'Page not found', robots: { index: fa
 
 export default function NotFound() {
   return (
-    <section className="wrap" style={{ paddingTop: 96, paddingBottom: 128, display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'flex-start' }}>
+    <section className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 128, display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'flex-start' }}>
       <span className="eyebrow">404</span>
       <h1 className="h2">We could not find that page.</h1>
       <p className="lead">It may have moved. Try the home page, or book a demo and we will help directly.</p>

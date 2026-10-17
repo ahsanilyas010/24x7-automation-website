@@ -8,9 +8,9 @@ import { SITE } from '@/lib/site';
 import { abs } from '@/lib/seo';
 
 export const STEPS = [
-  { n: '01', bar: '#17150F', t: 'Connect your channels', d: 'Link all your WhatsApp numbers, email inboxes, SMS numbers, Facebook, Instagram and LinkedIn. Import your existing contacts from a CSV file.' },
+  { n: '01', bar: '#17150F', t: 'Connect all your channels in one place', d: 'Link every WhatsApp number, email inbox, SMS number, Facebook, Instagram and LinkedIn account to a single dashboard. Import your existing contacts from a CSV file.' },
   { n: '02', bar: '#0B7282', t: 'Provide your business information', d: 'Upload your terms, prices, FAQs and documents. Pick your industry and the stages fill in for you. Rename any of them in Settings.' },
-  { n: '03', bar: '#3B6E2A', t: 'Control your conversations', d: 'Choose how you want to talk to your customers, then step in only when something needs you. Each item takes one tap: Done, Delegate, Follow up or Remind me.' },
+  { n: '03', bar: '#3B6E2A', t: 'Control your conversations', d: 'Choose how you want to talk to your customers across every channel, then step in only when something needs you. Each item takes one tap: Done, Delegate, Follow up or Remind me.' },
 ];
 
 export const STORIES = [
@@ -176,7 +176,7 @@ export function CustomIndustries() {
 export function DemoVideo() {
   if (!SITE.demoVideo) return null;
   return (
-    <section className="wrap" style={{ paddingTop: 96 }} aria-label="Product demo video">
+    <section className="wrap" style={{ paddingTop: 'var(--sec-md)' }} aria-label="Product demo video">
       <JsonLd data={{ '@context': 'https://schema.org', '@type': 'VideoObject', name: '24x7 Automation in one minute', description: 'How emails, WhatsApp and social messages arrive, are sorted into folders and replied to.', contentUrl: SITE.demoVideo, uploadDate: '2026-10-16', thumbnailUrl: abs('/opengraph-image') }} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
         <SectionHead eyebrow="See it in action" title="One minute. Every conversation, handled." lead="Watch how emails and WhatsApp messages arrive, are filed into the right folder and answered, before you speak to us." />
@@ -191,7 +191,7 @@ export function LeadSection({ h1 }: { h1?: boolean }) {
   const title = 'Call us now to get everything connected and boost your sales and service.';
   const Tag = h1 ? 'h1' : 'h2';
   return (
-    <section id="demo" className="wrap" style={{ paddingTop: h1 ? 56 : 112, paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap: 56, alignItems: 'start' }}>
+    <section id="demo" className="wrap" style={{ paddingTop: h1 ? 'var(--sec-sm)' : 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap: 56, alignItems: 'start' }}>
       <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <Tag style={{ margin: 0, fontSize: 'clamp(38px,5vw,60px)', lineHeight: 1.04, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text={title} /></Tag>
         <p style={{ margin: 0, fontSize: 19, lineHeight: '29px', color: '#4B463D', maxWidth: 460, textWrap: 'pretty' }}>A 20 minute call. We set it up with your industry stages and a few of your real questions, so you see replies in your own words.</p>
@@ -199,7 +199,7 @@ export function LeadSection({ h1 }: { h1?: boolean }) {
           {['Two week trial before you pay anything', 'One fixed price tailored to your business', 'Bespoke automation if your bottleneck is elsewhere'].map((x) => <li key={x} style={{ display: 'flex', gap: 10 }}><span style={{ color: '#3B6E2A', fontWeight: 700 }}>&#10003;</span>{x}</li>)}
         </ul>
       </div>
-      <div data-reveal="120" style={{ padding: 32, borderRadius: 14, background: '#FFFFFF', border: '1px solid #E0DBD1', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)' }}>
+      <div data-reveal="120" style={{ padding: 'var(--card-pad)', borderRadius: 14, background: '#FFFFFF', border: '1px solid #E0DBD1', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)' }}>
         <DemoForm />
       </div>
     </section>

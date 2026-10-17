@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CH, CH_ORDER } from './data';
-import { Icon, reducedMotion } from './motion';
+import { reducedMotion } from './motion';
 
 /** A working analogue and digital clock: "always on" shown as the real time ticking. */
 export default function LiveClock() {
@@ -32,11 +31,7 @@ export default function LiveClock() {
           <span className="live-dot" aria-hidden="true" />Working right now
         </span>
         <span style={{ fontSize: 28, lineHeight: '32px', fontWeight: 700, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{now ? `${pad(h)}:${pad(m)}:${pad(s)}` : '--:--:--'}</span>
-        <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {CH_ORDER.map((k) => (
-            <span key={k} title={CH[k].l} style={{ width: 26, height: 26, borderRadius: 7, background: CH[k].t, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Icon k={k} s={14} c={CH[k].c} /></span>
-          ))}
-        </span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: '#4B463D' }}>Every channel, one dashboard, 24 hours a day.</span>
       </div>
     </div>
   );

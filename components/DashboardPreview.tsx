@@ -36,7 +36,7 @@ export default function DashboardPreview({ caption }: { caption?: string }) {
         <span style={{ fontSize: 17, fontWeight: 700 }}>Today</span>
         <span style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Pill t="AI on" fg="#0B7282" bg="#E2F2F4" icon="spark" /><span style={{ fontSize: 13, color: '#6D675C' }}>No phone pings</span></span>
       </div>
-      <div style={{ padding: 16, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+      <div className="dash-grid" style={{ padding: 16 }}>
         {CH_ORDER.map((k) => {
           const c = CH[k], on = moving === k;
           return (

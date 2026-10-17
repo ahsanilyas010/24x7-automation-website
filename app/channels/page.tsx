@@ -15,12 +15,12 @@ export default function Page() {
       <PageHero trail={[{ name: 'Channels', path: '/channels' }]} eyebrow="Channels" title="Multiple channels. One dashboard." lead="Connect every place your customers write to you. Each channel keeps its own colour and its own folder, so messages go to the right place instead of piling up in one noisy inbox.">
         <BookDemoButton large />
       </PageHero>
-      <section className="wrap" style={{ paddingBottom: 96, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap: 48, alignItems: 'start' }}>
+      <section className="wrap" style={{ paddingBottom: 'var(--sec-md)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap: 48, alignItems: 'start' }}>
         <ChannelCards long />
-        <div style={{ position: 'sticky', top: 96 }} data-reveal="120"><DashboardPreview caption="Messages are filed by channel. Your phone stays quiet." /></div>
+        <div className="sticky-lg" style={{ position: 'sticky', top: 96 }} data-reveal="120"><DashboardPreview caption="Messages are filed by channel. Your phone stays quiet." /></div>
       </section>
       <section style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 96, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 900 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 900 }}>
           <SectionHead eyebrow="Less stress" title="No more ting, ting, ting." />
           <div className="prose" data-reveal="100">
             <p>Seven notifications from seven places make anyone anxious. With 24x7 Automation, two WhatsApp messages, three emails and two texts do not become seven alerts. Each goes into its own category on your dashboard, where it is drafted, prioritised and waiting.</p>

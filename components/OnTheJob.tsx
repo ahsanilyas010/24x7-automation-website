@@ -87,7 +87,7 @@ export default function OnTheJob() {
             <span style={{ width: 30, height: 30, borderRadius: 999, background: '#EAF2E4', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#3B6E2A', strokeWidth: 2.6, strokeLinecap: 'round', strokeLinejoin: 'round' }}><path className="draw-check" d="M20 6 9 17l-5-5" /></svg>
             </span>
-            <span style={{ fontSize: 15, fontWeight: 600, flex: 1 }}>Filed under {cur.stages[2]}</span>
+            <span style={{ fontSize: 15, fontWeight: 600, flex: 1 }}>Filed in your {c.l} folder</span>
             <Pill t={cur.stages[2]} fg="#0B7282" bg="#E2F2F4" />
           </Enter>
         )}

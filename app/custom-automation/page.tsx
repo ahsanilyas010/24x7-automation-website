@@ -13,15 +13,15 @@ export default function Page() {
   return (
     <>
       <JsonLd data={{ '@context': 'https://schema.org', '@type': 'Service', name: 'Custom business automation', serviceType: 'Business process automation', description: 'Tailored automation and software solutions designed around a business\'s own operational bottlenecks.', provider: { '@type': 'Organization', name: SITE.name, url: SITE.url }, url: abs('/custom-automation') }} />
-      <PageHero trail={[{ name: 'Custom automation', path: '/custom-automation' }]} eyebrow="Custom automation" title="Automation built around your business." lead="The AI front desk takes care of your conversations. If the bottleneck in your business is somewhere else, we look at the problem, design a solution with you and build it once you approve.">
+      <PageHero trail={[{ name: 'Custom automation', path: '/custom-automation' }]} eyebrow="Custom automation" title="Automation built around your business." lead="The AI front desk brings every conversation channel into one place. If the bottleneck in your business is somewhere else, we look at the problem, design a solution with you and build it once you approve.">
         <BookDemoButton large label="Tell us your bottleneck" />
       </PageHero>
-      <section className="wrap" style={{ paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <section className="wrap" style={{ paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 40 }}>
         <SectionHead eyebrow="How it works" title="You see the solution before you commit." lead="We do not start with a product and fit your business around it. We start with your operations." />
         <CustomSteps />
       </section>
       <section style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 96, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 40 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 40 }}>
           <SectionHead eyebrow="Who it is for" title="Whatever your industry, your process can be automated." lead="Tell us how your operations run and where the manual work is. These are some of the businesses we design for." />
           <CustomIndustries />
         </div>

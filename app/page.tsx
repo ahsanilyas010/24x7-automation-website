@@ -5,6 +5,7 @@ import { FAQ_HOME, IND } from '@/components/data';
 import { HeroField } from '@/components/Effects';
 import OnTheJob from '@/components/OnTheJob';
 import LiveClock from '@/components/LiveClock';
+import ChannelStrip from '@/components/ChannelStrip';
 import DashboardPreview from '@/components/DashboardPreview';
 import ApprovalDemo from '@/components/ApprovalDemo';
 import { Arrow, JsonLd, SectionHead, Split } from '@/components/ui';
@@ -27,7 +28,7 @@ const appLd = {
   url: SITE.url,
 };
 
-const more = { fontSize: 16, fontWeight: 600, color: '#0B7282', display: 'inline-flex', alignItems: 'center', gap: 6 } as const;
+const more = { fontSize: 16, fontWeight: 600, color: '#0B7282', display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44 } as const;
 
 export default function Home() {
   const marquee = [...IND, ...IND].map((x) => x.name);
@@ -44,6 +45,7 @@ export default function Home() {
               AI front desk for every business
             </span>
             <h1 className="hero-h1" style={{ margin: 0, fontSize: 'clamp(42px,5.6vw,72px)', lineHeight: 1.03, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text="Every conversation managed. Every reply on time." delay={2} /></h1>
+            <div data-reveal="120"><ChannelStrip /></div>
             <p data-reveal="160" style={{ margin: 0, fontSize: 20, lineHeight: '30px', color: '#4B463D', maxWidth: 540, textWrap: 'pretty' }}>24x7 Automation brings all your emails, WhatsApps, SMS and social media conversations into one unified platform, where everything is sorted and taken care of. We help you manage, reply to, sequence and prioritise every message, so you only step in when a decision needs you.</p>
             <div data-reveal="240" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Link href="/book-a-demo" data-magnetic className="btn btn-primary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>Book a demo <Arrow /></Link>
@@ -63,19 +65,28 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="wrap" style={{ paddingTop: 96 }} aria-label="On the job">
+      <section className="wrap" style={{ paddingTop: 'var(--sec-md)' }} aria-label="Multiple channels in one place">
+        <div data-reveal="0" className="card spot" style={{ padding: 'var(--card-pad)', display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <span className="eyebrow">Multiple channels. One place.</span>
+          <h2 className="h2" style={{ fontSize: 'clamp(28px,3.6vw,44px)', maxWidth: 820 }}>Every channel your customers use. One place for you.</h2>
+          <p className="lead" style={{ maxWidth: 680 }}>Stop switching between six apps. WhatsApp, email, SMS, Facebook, Instagram and LinkedIn all arrive in one dashboard, sorted into their own folders and ready to answer.</p>
+          <ChannelStrip />
+        </div>
+      </section>
+
+      <section className="wrap" style={{ paddingTop: 'var(--sec-md)' }} aria-label="On the job">
         <OnTheJob />
       </section>
 
       <DemoVideo />
 
-      <section id="how" className="wrap" style={{ paddingTop: 112, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <section id="how" className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 48 }}>
         <SectionHead eyebrow="How it works" title="Set up in minutes. Leave your conversations to us." />
         <HowSteps />
         <Link href="/how-it-works" style={more}>See the full walkthrough <Arrow /></Link>
       </section>
 
-      <section id="channels" className="wrap" style={{ paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'start' }}>
+      <section id="channels" className="wrap" style={{ paddingBottom: 'var(--sec-lg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <span className="eyebrow">Channels</span>
@@ -93,7 +104,7 @@ export default function Home() {
       </section>
 
       <section id="industries" style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'flex', flexDirection: 'column', gap: 48 }}>
           <SectionHead eyebrow="Industries" title="Built around how your trade actually works." lead="Choose your industry and the stages, wording and follow ups match it. Pick one below to see it run, or watch it change by itself." />
           <Industries />
           <Link href="/industries" style={more}>Browse all industries <Arrow /></Link>
@@ -101,14 +112,14 @@ export default function Home() {
       </section>
 
       <section id="usecases" style={{ background: '#12110E', color: '#EEEAE2' }}>
-        <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'flex', flexDirection: 'column', gap: 48 }}>
           <SectionHead dark eyebrow="Use cases" title="What it handles while you are on the job." />
           <UseCases />
           <Link href="/use-cases" style={{ ...more, color: '#62C6D3' }}>See every use case <Arrow /></Link>
         </div>
       </section>
 
-      <section className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 48, alignItems: 'center' }}>
+      <section className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 48, alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <SectionHead eyebrow="Beyond the front desk" title="Automation built around your business." lead="Whatever your industry, tell us where operations slow you down. We look at the problem, design a solution, show you the price and build it once you approve." />
           <div data-reveal="160"><Link href="/custom-automation" className="btn btn-secondary" style={{ height: 48, padding: '0 20px', fontSize: 16 }}>Explore custom automation <Arrow /></Link></div>
@@ -119,7 +130,7 @@ export default function Home() {
       </section>
 
       <section id="stories" style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'flex', flexDirection: 'column', gap: 48 }}>
           <div data-reveal="0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 720 }}>
               <span className="eyebrow">Case studies</span>
@@ -131,7 +142,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="security" className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'start' }}>
+      <section id="security" className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div data-reveal="0" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <span className="eyebrow">Security and control</span>
@@ -147,14 +158,14 @@ export default function Home() {
       </section>
 
       <section id="pricing" style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112, display: 'flex', flexDirection: 'column', gap: 48 }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-lg)', display: 'flex', flexDirection: 'column', gap: 48 }}>
           <SectionHead eyebrow="Pricing" title="Tailored to your business. One fixed price." />
           <TailoredPricing />
         </div>
       </section>
 
       <section id="faq">
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '112px 24px', display: 'flex', flexDirection: 'column', gap: 40 }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: 'var(--sec-lg) 24px', display: 'flex', flexDirection: 'column', gap: 40 }}>
           <h2 data-reveal="0" className="h2"><Split text="Questions" /></h2>
           <Faq items={FAQ_HOME} />
           <Link href="/faq" style={more}>Read all questions <Arrow /></Link>

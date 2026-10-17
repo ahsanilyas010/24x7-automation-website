@@ -81,6 +81,20 @@ export const IND: Industry[] = [
 
 export const industryBySlug = (slug: string) => IND.find((x) => x.slug === slug);
 
+/** The channels each industry's customers use most, shown on its page. */
+export const INDUSTRY_CHANNELS: Record<string, ChannelKey[]> = {
+  'construction-and-trades': ['wa', 'email', 'sms', 'fb', 'li'],
+  'home-services': ['wa', 'sms', 'email', 'fb'],
+  'clinics-and-dental': ['sms', 'wa', 'email', 'fb'],
+  'salons-and-beauty': ['wa', 'ig', 'fb', 'sms'],
+  'real-estate': ['email', 'wa', 'fb', 'ig', 'li'],
+  'legal-and-accounting': ['email', 'li', 'wa', 'sms'],
+  'restaurants-and-hospitality': ['wa', 'ig', 'fb', 'email'],
+  'automotive-and-garages': ['sms', 'wa', 'fb', 'email'],
+  'education-and-tutoring': ['email', 'wa', 'sms', 'fb'],
+  'fitness-studios': ['wa', 'ig', 'fb', 'email'],
+};
+
 /** Industries served by the custom automation service (the ERP-style demos discussed with Saquib). */
 export const CUSTOM_INDUSTRIES = [
   { name: 'Distributors and FMCG', d: 'Order flow, stock, distributor follow ups and returns in one place.' },

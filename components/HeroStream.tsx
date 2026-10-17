@@ -25,6 +25,8 @@ export default function HeroStream() {
   const dotA = useRef<SVGCircleElement>(null);
   const dotB = useRef<SVGCircleElement>(null);
   const [sc, setSc] = useState(1);
+  const [compact, setCompact] = useState(false);
+  const isCompact = useRef(false);
   const [counts, setCounts] = useState<Record<ChannelKey, number>>(BASE);
   const [last, setLast] = useState<Partial<Record<ChannelKey, Last>>>({});
   const [flash, setFlash] = useState<ChannelKey | null>(null);
@@ -34,16 +36,20 @@ export default function HeroStream() {
   const [clock, setClock] = useState('23:40');
 
   useEffect(() => {
-    const el = wrap.current;
-    if (!el) return;
+    const first = wrap.current;
+    if (!first) return;
+    const host = first.parentElement;
+    // Read the wrapper fresh each time: it is a different element in the compact (phone) layout.
     const f = () => {
-      const w = el.clientWidth || (el.parentElement && el.parentElement.clientWidth) || 0;
+      const el = wrap.current;
+      const w = (el && el.clientWidth) || (host && host.clientWidth) || 0;
       setSc(w ? Math.min(1, w / W) : 1);
+      isCompact.current = w > 0 && w < 480;
+      setCompact(isCompact.current);
     };
     f();
     const ro = new ResizeObserver(f);
-    ro.observe(el);
-    if (el.parentElement) ro.observe(el.parentElement);
+    if (host) ro.observe(host);
     window.addEventListener('resize', f);
     const t = setTimeout(f, 300);
     return () => { ro.disconnect(); window.removeEventListener('resize', f); clearTimeout(t); };
@@ -63,7 +69,8 @@ export default function HeroStream() {
       const r = panel.current?.getBoundingClientRect();
       if (r) {
         const idx = CH_ORDER.indexOf(m.ch);
-        window.dispatchEvent(new CustomEvent('hero-land', { detail: { x: r.left + 8, y: r.top + LANE_Y(idx) * (r.height / H), c: CH[m.ch].c } }));
+        const y = isCompact.current ? r.top + 66 + idx * 62 : r.top + LANE_Y(idx) * (r.height / H);
+        window.dispatchEvent(new CustomEvent('hero-land', { detail: { x: r.left + 8, y, c: CH[m.ch].c } }));
       }
       later(() => setFlash(null), 900);
       later(() => {
@@ -97,6 +104,58 @@ export default function HeroStream() {
     later(step, 500);
     return () => { alive = false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); };
   }, []);
+
+  if (compact) {
+    return (
+      <div ref={wrap} style={{ width: '100%', color: '#17150F' }} aria-label="Messages from WhatsApp, email, SMS, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Arriving from six channels</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 8 }}>
+            {CH_ORDER.map((k) => {
+              const c = CH[k], on = flash === k;
+              return (
+                <span key={k} title={c.l} style={{ height: 52, borderRadius: 12, background: '#FFFFFF', border: '1px solid ' + (on ? c.c : '#E0DBD1'), boxShadow: on ? '0 0 0 4px ' + c.t : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'border-color 150ms ease, box-shadow 150ms ease' }}><Icon k={k} s={22} c={c.c} /></span>
+              );
+            })}
+          </div>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#0B7282' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#0B7282', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round' }} aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" /></svg>
+            Sorted by AI into one dashboard
+          </span>
+          <div ref={panel} style={{ borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden' }}>
+            <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', borderBottom: '1px solid #E0DBD1', background: '#FFFFFF' }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>Dashboard</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Pill t="AI on" fg="#0B7282" bg="#E2F2F4" icon="spark" />
+                <span style={{ fontSize: 13, color: '#6D675C', fontVariantNumeric: 'tabular-nums' }}>{clock}</span>
+              </span>
+            </div>
+            <div style={{ padding: '10px 10px 6px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {CH_ORDER.map((k) => {
+                const c = CH[k], l = last[k], on = flash === k;
+                return (
+                  <div key={k} style={{ minHeight: 54, boxSizing: 'border-box', borderRadius: 10, background: on ? c.t : '#FFFFFF', border: '1px solid ' + (on ? c.c : '#E0DBD1'), padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 10, transition: 'background 200ms ease, border-color 200ms ease' }}>
+                    <span style={{ width: 30, height: 30, borderRadius: 8, background: c.t, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon k={k} s={16} c={c.c} /></span>
+                    <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: c.c, lineHeight: '18px' }}>{c.l}</span>
+                      <span style={{ fontSize: 13, color: '#4B463D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '17px' }}>
+                        {l ? (l.pending ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#0B7282', fontWeight: 600 }}><Dots />Drafting</span> : `${l.m.ol} · ${l.m.who}`) : 'All caught up'}
+                      </span>
+                    </span>
+                    <span key={counts[k]} className="count-pop" style={{ minWidth: 30, height: 30, padding: '0 8px', borderRadius: 999, background: c.c, color: '#FFFFFF', fontSize: 15, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontVariantNumeric: 'tabular-nums' }}>{counts[k]}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ height: 42, borderTop: '1px solid #E0DBD1', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', fontSize: 13, fontWeight: 600, color: '#4B463D' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />No phone pings</span>
+              <span style={{ fontVariantNumeric: 'tabular-nums' }}>{handled} handled · <span style={{ color: '#9A5B00' }}>{needs} need you</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={wrap} style={{ width: '100%', height: H * sc, minHeight: 200 }} aria-label="Messages from WhatsApp, email, SMS, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
