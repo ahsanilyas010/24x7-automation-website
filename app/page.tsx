@@ -15,7 +15,7 @@ import { SITE } from '@/lib/site';
 
 export const metadata = {
   ...pageMetadata({ title: `${SITE.name}: ${SITE.tagline}`, description: SITE.description, path: '/' }),
-  title: { absolute: `${SITE.name}: AI front desk for WhatsApp, email, SMS and social messages` },
+  title: { absolute: `${SITE.name}: AI front desk for WhatsApp, email and social messages` },
 };
 
 const appLd = {
@@ -44,16 +44,18 @@ export default function Home() {
               <svg width="15" height="15" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#0B7282', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }} aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" /></svg>
               AI front desk for every business
             </span>
-            <h1 className="hero-h1" style={{ margin: 0, fontSize: 'clamp(42px,5.6vw,72px)', lineHeight: 1.03, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text="Every conversation managed. Every reply on time." delay={2} /></h1>
+            <h1 className="hero-h1" style={{ margin: 0, fontSize: 'clamp(34px,4.3vw,56px)', lineHeight: 1.05, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text="Every conversation managed. Every reply on time." delay={2} /></h1>
             <div data-reveal="120"><ChannelStrip /></div>
-            <p data-reveal="160" style={{ margin: 0, fontSize: 20, lineHeight: '30px', color: '#4B463D', maxWidth: 540, textWrap: 'pretty' }}>24x7 Automation brings all your emails, WhatsApps, SMS and social media conversations into one unified platform, where everything is sorted and taken care of. We help you manage, reply to, sequence and prioritise every message, so you only step in when a decision needs you.</p>
+            <p data-reveal="160" style={{ margin: 0, fontSize: 20, lineHeight: '30px', color: '#4B463D', maxWidth: 540, textWrap: 'pretty' }}>24x7 Automation brings all your emails, WhatsApps and social media conversations into one unified platform, where everything is sorted and taken care of. We help you manage, reply to, sequence and prioritise every message, so you only step in when a decision needs you.</p>
             <div data-reveal="240" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Link href="/book-a-demo" data-magnetic className="btn btn-primary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>Book a demo <Arrow /></Link>
               <Link href="/how-it-works" className="btn btn-secondary" style={{ height: 52, padding: '0 22px', fontSize: 17 }}>See how it works</Link>
             </div>
-            <LiveClock />
           </div>
-          <div data-reveal="200" style={{ minWidth: 0 }}><HeroStream /></div>
+          <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <LiveClock />
+            <div data-reveal="200" style={{ minWidth: 0 }}><HeroStream /></div>
+          </div>
         </section>
       </div>
 
@@ -69,7 +71,7 @@ export default function Home() {
         <div data-reveal="0" className="card spot" style={{ padding: 'var(--card-pad)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <span className="eyebrow">Multiple channels. One place.</span>
           <h2 className="h2" style={{ fontSize: 'clamp(28px,3.6vw,44px)', maxWidth: 820 }}>Every channel your customers use. One place for you.</h2>
-          <p className="lead" style={{ maxWidth: 680 }}>Stop switching between six apps. WhatsApp, email, SMS, Facebook, Instagram and LinkedIn all arrive in one dashboard, sorted into their own folders and ready to answer.</p>
+          <p className="lead" style={{ maxWidth: 680 }}>Stop switching between five apps. WhatsApp, email, Facebook, Instagram and LinkedIn all arrive in one dashboard, sorted into their own folders and ready to answer.</p>
           <ChannelStrip />
         </div>
       </section>
@@ -81,7 +83,7 @@ export default function Home() {
       <DemoVideo />
 
       <section id="how" className="wrap" style={{ paddingTop: 'var(--sec-lg)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 48 }}>
-        <SectionHead eyebrow="How it works" title="Set up in minutes. Leave your conversations to us." />
+        <SectionHead eyebrow="How it works" title="Set up in minutes. Manage your conversations your way." />
         <HowSteps />
         <Link href="/how-it-works" style={more}>See the full walkthrough <Arrow /></Link>
       </section>
@@ -94,7 +96,7 @@ export default function Home() {
             <p className="lead" style={{ maxWidth: 460 }}>Each channel keeps its own colour and its own folder. Messages go straight to the right place, so you always know where a customer wrote from and where the reply will go.</p>
           </div>
           <div data-reveal="120" style={{ marginTop: 12 }}>
-            <DashboardPreview caption="Messages are filed by channel. Your phone stays quiet." />
+            <DashboardPreview caption="Messages are filed by channel. Your notifications stay managed." />
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -153,7 +155,11 @@ export default function Home() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
           <SecurityGrid />
-          <Link href="/security" style={more}>How control and audit work <Arrow /></Link>
+          <div data-reveal="120" style={{ padding: 22, borderRadius: 12, background: '#E2F2F4', border: '1px solid #A6D6DD', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 19, fontWeight: 700, color: '#0B5563' }}>Your data is yours</h3>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: '24px', color: '#17150F' }}>Your conversations are end-to-end encrypted. We connect your platforms to our system, but we do not have access to read your emails, WhatsApps or social messages.</p>
+          </div>
+          <Link href="/security#data" style={more}>See how your data is protected <Arrow /></Link>
         </div>
       </section>
 

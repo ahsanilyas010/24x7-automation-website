@@ -6,16 +6,16 @@ import { Dots, Icon, Pill, reducedMotion } from './motion';
 
 const W = 560;
 const H = 480;
-const LANE_Y = (i: number) => 92 + i * 64;
+const LANE_Y = (i: number) => 100 + i * 74;
 const SRC_W = 150;
 const PANEL_X = 262;
 const HUB_X = 206;
-const BASE: Record<ChannelKey, number> = { wa: 2, email: 3, sms: 1, fb: 1, ig: 1, li: 0 };
+const BASE: Record<ChannelKey, number> = { wa: 2, email: 3, fb: 1, ig: 1, li: 0 };
 
 type Last = { m: HeroItem; pending: boolean };
 
 /**
- * Messages from six channels travel into the app, and the AI files each one into its own folder on the dashboard.
+ * Messages from five channels travel into the app, and the AI files each one into its own folder on the dashboard.
  * Nothing piles up in a single inbox: each channel keeps a count, and a quiet "no pings" footer says why.
  */
 export default function HeroStream() {
@@ -107,10 +107,10 @@ export default function HeroStream() {
 
   if (compact) {
     return (
-      <div ref={wrap} style={{ width: '100%', color: '#17150F' }} aria-label="Messages from WhatsApp, email, SMS, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
+      <div ref={wrap} style={{ width: '100%', color: '#17150F' }} aria-label="Messages from WhatsApp, email, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Arriving from six channels</span>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 8 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Arriving from five channels</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 8 }}>
             {CH_ORDER.map((k) => {
               const c = CH[k], on = flash === k;
               return (
@@ -148,7 +148,7 @@ export default function HeroStream() {
               })}
             </div>
             <div style={{ height: 42, borderTop: '1px solid #E0DBD1', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', fontSize: 13, fontWeight: 600, color: '#4B463D' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />No phone pings</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />Managed notifications</span>
               <span style={{ fontVariantNumeric: 'tabular-nums' }}>{handled} handled · <span style={{ color: '#9A5B00' }}>{needs} need you</span></span>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function HeroStream() {
   }
 
   return (
-    <div ref={wrap} style={{ width: '100%', height: H * sc, minHeight: 200 }} aria-label="Messages from WhatsApp, email, SMS, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
+    <div ref={wrap} style={{ width: '100%', height: H * sc, minHeight: 200 }} aria-label="Messages from WhatsApp, email, Facebook, Instagram and LinkedIn are filed into separate folders on one dashboard" role="img">
       <div style={{ width: W, height: H, transform: `scale(${sc})`, transformOrigin: 'top left', position: 'relative', color: '#17150F' }}>
         <div style={{ position: 'absolute', left: 0, top: 0, fontSize: 13, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: '#6D675C' }}>Arriving</div>
         <svg width={W} height={H} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
@@ -211,8 +211,8 @@ export default function HeroStream() {
             );
           })}
           <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 38, borderTop: '1px solid #E0DBD1', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', fontSize: 12.5, fontWeight: 600, color: '#4B463D' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />No phone pings</span>
-            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{handled} handled · <span style={{ color: '#9A5B00' }}>{needs} need you</span></span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}><span style={{ width: 7, height: 7, borderRadius: 999, background: '#3B6E2A' }} />Managed notifications</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', color: '#9A5B00' }}>{needs} need you</span>
           </div>
         </div>
       </div>

@@ -1,11 +1,11 @@
 import { CtaBand, PageHero, SectionHead, BookDemoButton } from '@/components/ui';
-import { SecurityGrid } from '@/components/sections';
+import { DataTransparency, SecurityGrid } from '@/components/sections';
 import ApprovalDemo from '@/components/ApprovalDemo';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Security and control: nothing goes out without your say',
-  description: 'Shadow mode, replies drawn from your own documents, a full audit log and a pause switch. You decide what 24x7 Automation sends on your behalf.',
+  title: 'Security and control: your data stays yours',
+  description: 'End-to-end encryption, no access to read your messages, replies drawn from your own documents, a full audit log and a pause switch. Plain-language answers on how your data is stored and protected.',
   path: '/security',
 });
 
@@ -21,7 +21,13 @@ export default function Page() {
           <SecurityGrid />
         </div>
       </section>
-      <section style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
+      <section id="data" style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 40 }}>
+          <SectionHead eyebrow="Your data" title="Your data is yours. We keep it transparent." lead="24x7 Automation connects your platforms to our system, but we do not have access to read your emails, WhatsApps or social messages. Your conversations are end-to-end encrypted, and we explain how it all works in plain language." />
+          <DataTransparency />
+        </div>
+      </section>
+      <section>
         <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 900 }}>
           <SectionHead eyebrow="Complaints" title="Specific answers, not generic ones." />
           <div className="prose" data-reveal="100">

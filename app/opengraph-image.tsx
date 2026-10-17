@@ -14,7 +14,7 @@ export default function OpengraphImage() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div style={{ fontSize: 84, fontWeight: 700, letterSpacing: -2, lineHeight: 1.02, maxWidth: 980 }}>Every conversation managed. Every reply on time.</div>
-          <div style={{ fontSize: 32, color: '#4B463D' }}>WhatsApp, email, SMS, Facebook, Instagram and LinkedIn in one dashboard.</div>
+          <div style={{ fontSize: 32, color: '#4B463D' }}>WhatsApp, email, Facebook, Instagram and LinkedIn in one dashboard.</div>
         </div>
       </div>
     ),

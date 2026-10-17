@@ -15,7 +15,7 @@ export default function LiveClock() {
   const pad = (n: number) => String(n).padStart(2, '0');
   const hourDeg = ((h % 12) + m / 60) * 30, minDeg = (m + s / 60) * 6, secDeg = s * 6;
   return (
-    <div data-reveal="320" className="card" style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', flexWrap: 'wrap' }}>
+    <div data-reveal="320" className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 18px' }}>
       <svg width="76" height="76" viewBox="0 0 76 76" role="img" aria-label={now ? `Current time ${pad(h)}:${pad(m)}` : 'Clock'} style={{ flex: 'none' }}>
         <circle cx="38" cy="38" r="34" fill="#F6F4EF" stroke="#17150F" strokeWidth="3" />
         {Array.from({ length: 12 }, (_, i) => (

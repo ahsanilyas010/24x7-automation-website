@@ -27,7 +27,7 @@ export default function Page() {
           {IND.map((x, i) => (
             <Link key={x.slug} href={`/industries/${x.slug}`} data-reveal={String(i * 50)} className="card lift spot" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               <div style={{ position: 'relative', height: 150 }}>
-                <Image src={PHOTOS[x.photo].src} alt={PHOTOS[x.photo].alt} fill placeholder="blur" sizes="(max-width: 700px) 100vw, 360px" style={{ objectFit: 'cover', objectPosition: PHOTOS[x.photo].pos }} />
+                <Image src={PHOTOS[x.photo].src} alt={PHOTOS[x.photo].alt} fill placeholder="blur" sizes="(max-width: 700px) 100vw, 360px" quality={90} style={{ objectFit: 'cover', objectPosition: PHOTOS[x.photo].pos }} />
               </div>
               <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>{x.name}</h3>

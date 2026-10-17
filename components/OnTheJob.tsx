@@ -30,8 +30,8 @@ export default function OnTheJob() {
     const run = (i: number) => {
       if (!alive) return;
       setN(i);
-      if (i >= STEPS) { t = setTimeout(() => { if (!alive) return; setIdx((x) => (x + 1) % IND.length); }, 3600); return; }
-      t = setTimeout(() => run(i + 1), i === 0 ? 600 : 1500);
+      if (i >= STEPS) { t = setTimeout(() => { if (!alive) return; setIdx((x) => (x + 1) % IND.length); }, 1100); return; }
+      t = setTimeout(() => run(i + 1), i === 0 ? 250 : 480);
     };
     run(0);
     return () => { alive = false; clearTimeout(t); };
@@ -43,10 +43,10 @@ export default function OnTheJob() {
   return (
     <div ref={box} className="otj">
       <div className="otj-media img-reveal" data-reveal="0">
-        <div data-parallax="0.08" className="otj-img">
+        <div data-parallax="0.03" className="otj-img">
           {IND.map((x, i) => (
             <div key={x.slug} className="otj-slide" style={{ opacity: i === idx ? 1 : 0 }} aria-hidden={i !== idx}>
-              <Image src={PHOTOS[x.photo].src} alt={PHOTOS[x.photo].alt} fill placeholder="blur" sizes="(max-width: 1248px) 100vw, 1200px" style={{ objectFit: 'cover', objectPosition: PHOTOS[x.photo].pos }} />
+              <Image src={PHOTOS[x.photo].src} alt={PHOTOS[x.photo].alt} fill placeholder="blur" sizes="(max-width: 1248px) 100vw, 1200px" quality={90} style={{ objectFit: 'cover', objectPosition: PHOTOS[x.photo].pos }} />
             </div>
           ))}
         </div>
@@ -54,7 +54,7 @@ export default function OnTheJob() {
         <div className="otj-copy">
           <span className="eyebrow" style={{ color: '#62C6D3' }}>On the job</span>
           <h2 className="h2" style={{ color: '#FFFFFF', maxWidth: 560 }}>Your hands are full. Your customers still get an answer.</h2>
-          <p style={{ margin: 0, fontSize: 18, lineHeight: '28px', color: '#EEEAE2', maxWidth: 500 }}>No more ting, ting, ting. Every conversation is collected quietly, then prepared and warmed up with drafts and replies, ready for you to send when you open your dashboard.</p>
+          <p style={{ margin: 0, fontSize: 18, lineHeight: '28px', color: '#EEEAE2', maxWidth: 500 }}>No more ting, ting, ting. Every conversation is collected and managed, then prepared with drafts and replies, ready for you to send when you open your dashboard.</p>
           <div className="otj-dots" role="tablist" aria-label="Industry scenes">
             {IND.map((x, i) => (
               <button key={x.slug} role="tab" aria-selected={i === idx} aria-label={x.name} onClick={() => { setIdx(i); setN(RM.current ? STEPS : 0); }} className={i === idx ? 'on' : undefined} />

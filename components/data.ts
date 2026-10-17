@@ -1,20 +1,18 @@
-export type ChannelKey = 'wa' | 'email' | 'sms' | 'fb' | 'ig' | 'li';
+export type ChannelKey = 'wa' | 'email' | 'fb' | 'ig' | 'li';
 
 export const CH: Record<ChannelKey, { l: string; c: string; t: string }> = {
   wa: { l: 'WhatsApp', c: '#0F7A45', t: '#E3F4EA' },
   email: { l: 'Email', c: '#2457C5', t: '#E7EEFB' },
-  sms: { l: 'SMS', c: '#7A4A9A', t: '#F2EAF7' },
   fb: { l: 'Facebook', c: '#1877F2', t: '#E3EEFE' },
   ig: { l: 'Instagram', c: '#C2185B', t: '#FCE7F0' },
   li: { l: 'LinkedIn', c: '#B4540A', t: '#FBEBDD' },
 };
 
-export const CH_ORDER: ChannelKey[] = ['wa', 'email', 'sms', 'fb', 'ig', 'li'];
+export const CH_ORDER: ChannelKey[] = ['wa', 'email', 'fb', 'ig', 'li'];
 
 export const CHANNEL_INFO: Record<ChannelKey, { d: string; long: string }> = {
   wa: { d: 'Connect more than one WhatsApp number. Photos and documents land in the same thread as the reply.', long: 'Most customers already live on WhatsApp. Connect every business number you use and each conversation is collected in its own WhatsApp folder, with a drafted reply waiting. Photos, voice notes and documents stay in the same thread as the answer.' },
   email: { d: 'Connect Gmail, Outlook, Hotmail and more in one place. Complaints and quote requests are picked out first.', long: 'Add as many inboxes as your business uses: Gmail, Outlook, Hotmail, Sky or your own domain. Complaints and quote requests are picked out and handled first, and replies go out from the address the customer wrote to.' },
-  sms: { d: 'For customers who text. Reminders and confirmations go out from the same number every time.', long: 'Customers who text get a fast, consistent answer. Reminders, confirmations and rebooking offers go out from the same number every time, and every thread sits in its own SMS folder instead of a noisy phone screen.' },
   fb: { d: 'Messages from your Facebook business page go into their own folder with a reply ready to approve.', long: 'Questions sent to your Facebook business page are collected into a Facebook folder alongside everything else. Each one is sorted, drafted and prioritised, so a message sent at midnight is not found three days later.' },
   ig: { d: 'Instagram direct messages are collected with the rest, so no enquiry sits unseen in an app you rarely open.', long: 'Instagram enquiries are easy to miss. Direct messages are collected into an Instagram folder, drafted in your voice and prioritised, so a customer who messages after seeing a post still gets an answer on time.' },
   li: { d: 'LinkedIn messages from prospects and partners are not ignored. They are sorted and drafted like the rest.', long: 'Prospects, partners and recruiters message businesses on LinkedIn and often wait weeks for a reply. Those conversations are collected into a LinkedIn folder, drafted and prioritised so a good opportunity is never ignored.' },
@@ -26,7 +24,7 @@ export type Industry = {
   h1: string; intro: string; pains: string[]; helps: string[]; desc: string;
 };
 
-export const IND: Industry[] = [
+const IND_DATA: Industry[] = [
   { name: 'Construction and trades', slug: 'construction-and-trades', ch: 'wa', who: 'Sarah, Leeds', ask: 'Can you quote for a rear extension, about 4m by 5m?', reply: 'Thanks Sarah. We offer a free site visit first. Would Thursday at 10:00 or Friday at 14:00 suit you?', stages: ['New', 'Qualified', 'Site visit', 'Quoted', 'Won', 'Lost'], photo: 'builder',
     h1: 'AI front desk for construction and trades', desc: 'Answer quote requests the moment they arrive, book site visits and chase every quote while your team is on site.',
     intro: 'Quote requests arrive at all hours, usually while the team is on site and the phone is in a pocket. 24x7 Automation collects every enquiry from every channel, drafts a reply and offers the site visit, so the job does not go to whoever answered first.',
@@ -37,9 +35,9 @@ export const IND: Industry[] = [
     intro: 'Home service customers want an answer now, and they message several firms at once. 24x7 Automation replies in minutes, explains your callout fees from your own terms and hands the job to the right engineer.',
     pains: ['Urgent callouts arrive while engineers are under a sink', 'Disputes over callout fees take hours of back and forth', 'Jobs get passed to engineers by phone and forgotten'],
     helps: ['An engineer slot is offered immediately and the booking is recorded', 'Complaint replies are drafted from your terms with the clause shown', 'Jobs are delegated to the right person and the customer is told'] },
-  { name: 'Clinics and dental', slug: 'clinics-and-dental', ch: 'sms', who: 'Patient, Bristol', ask: 'Do you have a hygienist appointment this week?', reply: 'We have Wednesday at 09:15 or Friday at 10:30. Reply 1 or 2 and we will book it.', stages: ['New', 'Triage', 'Booked', 'Attended', 'Recall', 'Lost'], photo: 'dental',
-    h1: 'AI front desk for clinics and dental practices', desc: 'Offer open appointment slots by text, handle rebookings and recalls and keep reception free for patients in the room.',
-    intro: 'Phone tag over diary changes keeps reception busy and patients waiting. 24x7 Automation answers appointment questions by text, WhatsApp or email, offers open slots and sends recall reminders.',
+  { name: 'Clinics and dental', slug: 'clinics-and-dental', ch: 'wa', who: 'Patient, Bristol', ask: 'Do you have a hygienist appointment this week?', reply: 'We have Wednesday at 09:15 or Friday at 10:30. Reply 1 or 2 and we will book it.', stages: ['New', 'Triage', 'Booked', 'Attended', 'Recall', 'Lost'], photo: 'dental',
+    h1: 'AI front desk for clinics and dental practices', desc: 'Offer open appointment slots by message, handle rebookings and recalls and keep reception free for patients in the room.',
+    intro: 'Phone tag over diary changes keeps reception busy and patients waiting. 24x7 Automation answers appointment questions on WhatsApp, email and social media, offers open slots and sends recall reminders.',
     pains: ['Reception answers the phone all day for diary changes', 'Patients message outside opening hours and wait until morning', 'Recall reminders are sent inconsistently'],
     helps: ['Open slots are offered and rebookings are handled without staff', 'Out of hours messages are collected, drafted and ready for the morning', 'Recalls are sent on schedule from the same number every time'] },
   { name: 'Salons and beauty', slug: 'salons-and-beauty', ch: 'wa', who: 'Chloe, Brighton', ask: 'How much for a full head of highlights?', reply: 'From £95 depending on length. A quick consultation first is free. Would Saturday at 11:00 work?', stages: ['New', 'Consultation', 'Booked', 'Visited', 'Rebook', 'Lost'], photo: 'salon',
@@ -62,11 +60,11 @@ export const IND: Industry[] = [
     intro: 'Group bookings and event enquiries come in during the busiest hours of service. 24x7 Automation answers with availability and deposit terms, holds the table and confirms the booking.',
     pains: ['Booking messages arrive mid service', 'Group and event enquiries need deposit and menu details', 'Social media messages are checked only occasionally'],
     helps: ['Availability and deposit terms are replied to instantly', 'Tables are held and confirmed as stages', 'Instagram and Facebook enquiries are collected with the rest'] },
-  { name: 'Automotive and garages', slug: 'automotive-and-garages', ch: 'sms', who: 'Gary, Norwich', ask: 'Need an MOT and a look at my brakes.', reply: 'We can do both on Monday. MOT is £54.85, brake check is free with it. Drop off by 08:30.', stages: ['New', 'Diagnosed', 'Quoted', 'Booked in', 'Collected', 'Lost'], photo: 'garage',
-    h1: 'AI front desk for garages and automotive businesses', desc: 'Quote, book and remind customers by text while your mechanics stay under the bonnet.',
-    intro: 'Mechanics cannot answer messages with their hands inside an engine. 24x7 Automation quotes standard jobs, books the car in and sends reminders by text.',
-    pains: ['Calls and texts are missed while the team is working', 'Customers ask the same pricing questions every day', 'MOT and service reminders are sent late or not at all'],
-    helps: ['Standard jobs are quoted from your price list and booked in', 'Repeat questions are answered from your own information', 'Reminders go out by SMS from the same number every time'] },
+  { name: 'Automotive and garages', slug: 'automotive-and-garages', ch: 'wa', who: 'Gary, Norwich', ask: 'Need an MOT and a look at my brakes.', reply: 'We can do both on Monday. MOT is £54.85, brake check is free with it. Drop off by 08:30.', stages: ['New', 'Diagnosed', 'Quoted', 'Booked in', 'Collected', 'Lost'], photo: 'garage',
+    h1: 'AI front desk for garages and automotive businesses', desc: 'Quote, book and remind customers by message while your mechanics stay under the bonnet.',
+    intro: 'Mechanics cannot answer messages with their hands inside an engine. 24x7 Automation quotes standard jobs, books the car in and sends reminders on WhatsApp.',
+    pains: ['Calls and messages are missed while the team is working', 'Customers ask the same pricing questions every day', 'MOT and service reminders are sent late or not at all'],
+    helps: ['Standard jobs are quoted from your price list and booked in', 'Repeat questions are answered from your own information', 'Reminders go out on WhatsApp from the same number every time'] },
   { name: 'Education and tutoring', slug: 'education-and-tutoring', ch: 'email', who: 'Parent, Oxford', ask: 'Do you offer GCSE maths tutoring online?', reply: 'Yes, online and in person. The first lesson is a trial at half price. Which evenings suit your child?', stages: ['New', 'Assessment', 'Trial lesson', 'Enrolled', 'Renewed', 'Lost'], photo: 'tutor',
     h1: 'AI front desk for tutors and education businesses', desc: 'Respond to parent and student enquiries, book trial lessons and manage renewals without evening admin.',
     intro: 'Parents enquire in the evening and expect a quick answer. 24x7 Automation replies with your subjects, prices and trial offer, books the first lesson and prompts renewals.',
@@ -79,19 +77,23 @@ export const IND: Industry[] = [
     helps: ['Class times and trial offers are replied to instantly', 'Trials are booked and tracked from enquiry to member', 'Follow ups after the first class are sent automatically'] },
 ];
 
+/** Display order. Construction deliberately comes last so the first impression is not "only for builders". */
+const IND_ORDER = ['salons-and-beauty', 'real-estate', 'legal-and-accounting', 'restaurants-and-hospitality', 'education-and-tutoring', 'fitness-studios', 'clinics-and-dental', 'automotive-and-garages', 'home-services', 'construction-and-trades'];
+export const IND: Industry[] = IND_ORDER.map((slug) => IND_DATA.find((x) => x.slug === slug)!);
+
 export const industryBySlug = (slug: string) => IND.find((x) => x.slug === slug);
 
 /** The channels each industry's customers use most, shown on its page. */
 export const INDUSTRY_CHANNELS: Record<string, ChannelKey[]> = {
-  'construction-and-trades': ['wa', 'email', 'sms', 'fb', 'li'],
-  'home-services': ['wa', 'sms', 'email', 'fb'],
-  'clinics-and-dental': ['sms', 'wa', 'email', 'fb'],
-  'salons-and-beauty': ['wa', 'ig', 'fb', 'sms'],
+  'construction-and-trades': ['wa', 'email', 'fb', 'li'],
+  'home-services': ['wa', 'email', 'fb'],
+  'clinics-and-dental': ['wa', 'email', 'fb'],
+  'salons-and-beauty': ['wa', 'ig', 'fb'],
   'real-estate': ['email', 'wa', 'fb', 'ig', 'li'],
-  'legal-and-accounting': ['email', 'li', 'wa', 'sms'],
+  'legal-and-accounting': ['email', 'li', 'wa'],
   'restaurants-and-hospitality': ['wa', 'ig', 'fb', 'email'],
-  'automotive-and-garages': ['sms', 'wa', 'fb', 'email'],
-  'education-and-tutoring': ['email', 'wa', 'sms', 'fb'],
+  'automotive-and-garages': ['wa', 'fb', 'email'],
+  'education-and-tutoring': ['email', 'wa', 'fb'],
   'fitness-studios': ['wa', 'ig', 'fb', 'email'],
 };
 
@@ -136,12 +138,12 @@ export const UC: UseCase[] = [
     { f: 'c', t: 'The tap you fitted last week is dripping again.' },
     { f: 'ai', t: 'Sorry about that, Priya. I have passed this to Dan, who fitted it. He will message you today to arrange a time.' },
     { f: 's', t: 'Delegated to Dan · due today' }] },
-  { title: 'Follow ups that happen', desc: 'Quotes are chased on schedule, in your wording.', who: 'Jo Evans', ch: 'sms', msgs: [
+  { title: 'Follow ups that happen', desc: 'Quotes are chased on schedule, in your wording.', who: 'Jo Evans', ch: 'wa', msgs: [
     { f: 's', t: 'Quote sent 5 days ago · no reply' },
     { f: 'ai', t: 'Hi Jo, just checking you received our quote for the bathroom refit. Happy to answer any questions.' },
     { f: 'c', t: 'Yes thanks. Can we start in November?' },
     { f: 's', t: 'Stage moved from Quoted to Won' }] },
-  { title: 'Save edits as templates', desc: 'Edit a draft once and reuse it next time.', who: 'Amy Clarke', ch: 'sms', msgs: [
+  { title: 'Save edits as templates', desc: 'Edit a draft once and reuse it next time.', who: 'Amy Clarke', ch: 'wa', msgs: [
     { f: 'c', t: 'Can I move my appointment to Friday?' },
     { f: 'ai', t: 'Of course. We have Friday at 10:30 or 15:15. Parking is free behind the building.' },
     { f: 's', t: 'You edited the draft · saved as template Rebooking' },
@@ -154,7 +156,7 @@ export const HERO: HeroItem[] = [
   { ch: 'wa', who: 'Sarah Hughes', txt: 'Can you quote for a rear extension?', t: '23:41', o: 'ai', ol: 'Reply drafted' },
   { ch: 'email', who: 'Mark Patel', txt: 'Why was I charged a callout fee?', t: '00:17', o: 'ai', ol: 'Clause 4.2 cited' },
   { ch: 'li', who: 'Anita Rao', txt: 'Interested in a partnership call', t: '01:05', o: 'needs', ol: 'Needs you' },
-  { ch: 'sms', who: 'Jo Evans', txt: 'Can we start in November?', t: '01:52', o: 'won', ol: 'Moved to Won' },
+  { ch: 'email', who: 'Jo Evans', txt: 'Can we start in November?', t: '01:52', o: 'won', ol: 'Moved to Won' },
   { ch: 'ig', who: 'Lena Fox', txt: 'Any Saturday slots left?', t: '02:30', o: 'ai', ol: 'Reply drafted' },
   { ch: 'wa', who: 'Priya Shah', txt: 'The tap is dripping again', t: '03:08', o: 'del', ol: 'Delegated to Dan' },
   { ch: 'fb', who: 'Omar Khan', txt: 'Are you open on Sundays?', t: '05:12', o: 'ai', ol: 'Reply drafted' },
@@ -169,11 +171,11 @@ export const OUT: Record<HeroItem['o'], [string, string]> = {
 };
 
 export const FAQ: [string, string][] = [
-  ['What is 24x7 Automation?', '24x7 Automation is an AI front desk. It brings your emails, WhatsApp, SMS, Facebook, Instagram and LinkedIn conversations into one unified dashboard, sorts each one into its own folder, drafts replies in your voice and prioritises what needs a response, so you only step in when a decision needs you.'],
+  ['What is 24x7 Automation?', '24x7 Automation is an AI front desk. It brings your emails, WhatsApp, Facebook, Instagram and LinkedIn conversations into one unified dashboard, sorts each one into its own folder, drafts replies in your voice and prioritises what needs a response, so you only step in when a decision needs you.'],
   ['Does the AI send messages without me?', 'Only if you want it to. In Shadow mode every reply is a draft you approve. You can switch to full replies per channel when you trust it, and one switch pauses the AI across every channel.'],
-  ['Which channels does it work with?', 'WhatsApp Business, email, SMS, Facebook, Instagram and LinkedIn. Each channel keeps its own colour and its own folder in the dashboard, so you always know where a customer wrote from.'],
-  ['Can I connect more than one account per channel?', 'Yes. Connect several email addresses (Gmail, Outlook, Hotmail and others), several WhatsApp numbers and more than one SMS number, all in one place. Multiple accounts are included in tailored plans.'],
-  ['Will my phone still ping all day?', 'No. Messages are collected quietly into the right folder instead of arriving as a stream of notifications. When you open the dashboard you see what needs a response now, and the rest is already drafted or handled.'],
+  ['Which channels does it work with?', 'WhatsApp Business, email, Facebook, Instagram and LinkedIn. Each channel keeps its own colour and its own folder in the dashboard, so you always know where a customer wrote from.'],
+  ['Can I connect more than one account per channel?', 'Yes. Connect several email addresses (Gmail, Outlook, Hotmail and others), and several WhatsApp numbers, all in one place. Multiple accounts are included in tailored plans.'],
+  ['Will my phone still ping all day?', 'No. Messages are collected and managed in the right folder instead of arriving as a stream of notifications. When you open the dashboard you see what needs a response now, and the rest is already drafted or handled.'],
   ['How does the dashboard work?', 'The dashboard shows one day at a time. Every conversation has a toolbar with Done, Delegate, Follow up and Remind me, and each action is recorded on the day you took it, so you can see exactly what is left.'],
   ['How does it handle complaints?', 'Complaints are flagged and drafted for your approval, never sent on their own. The draft is built from your own terms and documents and shows the clause it used, so the reply is specific rather than generic.'],
   ['Can I change the stages?', 'Yes. Your industry sets sensible stages to start with, and you can rename, reorder or remove any of them in Settings.'],
@@ -182,10 +184,12 @@ export const FAQ: [string, string][] = [
   ['How much does it cost?', 'Pricing is tailored to your business, based on the channels you use, the volume of conversations and your team size. You get one fixed price, so you always know what you will pay. Book a demo and we will quote you.'],
   ['Which industries is it built for?', 'Any business that answers customers by message: construction and trades, home services, clinics and dental, salons, real estate, legal and accounting, hospitality, garages, education and fitness, and many more. Pick your industry and the stages and wording match it.'],
   ['Can you build automation around my own processes?', 'Yes. Tell us where your business is slowed down and we design a solution around it. You approve the solution and the price before we build anything. See our custom automation page for how it works.'],
+  ['Can 24x7 Automation read my emails or WhatsApp messages?', 'No. We connect your domains and platforms to our system, but we do not have access to see your emails, WhatsApps or social messages. Your conversations are end-to-end encrypted, so they stay private to you.'],
+  ['How is my data stored and protected?', 'Your conversations are end-to-end encrypted. The access you grant to a channel, such as your email connection, is kept in an encrypted vault and never in plain text. You can disconnect any channel at any time, and every action is recorded in an audit log by day. We explain how data is stored in plain language on our security page.'],
   ['How do I get started?', 'Book a demo. We set it up with your industry stages and a few of your real questions, so you see replies in your own words. You then start your two week trial.'],
 ];
 
 export const FAQ_PRICING = [FAQ[9], FAQ[10], FAQ[3], FAQ[1]];
-export const FAQ_HOME = [FAQ[0], FAQ[1], FAQ[4], FAQ[9], FAQ[10], FAQ[12]];
+export const FAQ_HOME = [FAQ[0], FAQ[1], FAQ[13], FAQ[4], FAQ[9], FAQ[10], FAQ[12]];
 
 export const COUNTRIES = ['United Kingdom', 'United States', 'Pakistan', 'United Arab Emirates', 'Saudi Arabia', 'Canada', 'Australia', 'Ireland', 'India', 'Bangladesh', 'Qatar', 'Kuwait', 'Oman', 'Bahrain', 'Turkey', 'Egypt', 'South Africa', 'Nigeria', 'Kenya', 'Ghana', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands', 'Belgium', 'Sweden', 'Norway', 'Denmark', 'Poland', 'Portugal', 'Switzerland', 'Singapore', 'Malaysia', 'Indonesia', 'Philippines', 'Hong Kong', 'China', 'Japan', 'South Korea', 'New Zealand', 'Brazil', 'Mexico', 'Argentina', 'Other'];

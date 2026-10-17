@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CH, CH_ORDER, ChannelKey } from './data';
 import { Icon, Pill, reducedMotion } from './motion';
 
-const BASE: Record<ChannelKey, number> = { wa: 3, email: 5, sms: 2, fb: 1, ig: 2, li: 1 };
+const BASE: Record<ChannelKey, number> = { wa: 3, email: 5, fb: 1, ig: 2, li: 1 };
 const TICKS = 10;
 
 /** A short looping preview of the dashboard: each channel has its own folder with a count, and only decisions surface. */
@@ -26,15 +26,15 @@ export default function DashboardPreview({ caption }: { caption?: string }) {
     return () => clearInterval(iv);
   }, [visible]);
 
-  const moving = step < 6 ? CH_ORDER[step] : null;
+  const moving = step < 5 ? CH_ORDER[step] : null;
   const counts = CH_ORDER.reduce((a, k, i) => ({ ...a, [k]: BASE[k] + (step > i ? 1 : 0) }), {} as Record<ChannelKey, number>);
-  const needsLit = step >= 6;
+  const needsLit = step >= 5;
 
   return (
     <div ref={box} style={{ borderRadius: 16, background: '#F6F4EF', border: '1px solid #C9C2B6', boxShadow: '0 1px 2px rgba(23,21,15,.06),0 8px 24px rgba(23,21,15,.10)', overflow: 'hidden', color: '#17150F' }} role="img" aria-label="The 24x7 dashboard: each channel has its own folder with a message count, and only decisions need you">
       <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', background: '#FFFFFF', borderBottom: '1px solid #E0DBD1' }}>
         <span style={{ fontSize: 17, fontWeight: 700 }}>Today</span>
-        <span style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Pill t="AI on" fg="#0B7282" bg="#E2F2F4" icon="spark" /><span style={{ fontSize: 13, color: '#6D675C' }}>No phone pings</span></span>
+        <span style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Pill t="AI on" fg="#0B7282" bg="#E2F2F4" icon="spark" /><span style={{ fontSize: 13, color: '#6D675C' }}>Managed notifications</span></span>
       </div>
       <div className="dash-grid" style={{ padding: 16 }}>
         {CH_ORDER.map((k) => {
