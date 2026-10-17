@@ -15,13 +15,13 @@ export const metadata = pageMetadata({
 export default function Page() {
   return (
     <>
-      <PageHero trail={[{ name: 'Industries', path: '/industries' }]} eyebrow="Industries" title="Built around how your trade actually works." lead="Choose your industry and the stages, wording and follow ups match it. Anything can be renamed, reordered or removed in Settings.">
+      <PageHero trail={[{ name: 'Industries', path: '/industries' }]} eyebrow="Industries" title="Built around how your trade actually works." lead="Choose your industry and the stages, wording and follow ups match it, with every channel your customers use managed in one place. Anything can be renamed, reordered or removed in Settings.">
         <BookDemoButton large />
       </PageHero>
       <section style={{ background: '#FFFFFF', borderTop: '1px solid #E0DBD1', borderBottom: '1px solid #E0DBD1' }}>
-        <div className="wrap" style={{ paddingTop: 72, paddingBottom: 72 }}><Industries /></div>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-sm)', paddingBottom: 'var(--sec-sm)' }}><Industries /></div>
       </section>
-      <section className="wrap" style={{ paddingTop: 96, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <section className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 40 }}>
         <SectionHead eyebrow="Explore by industry" title="Find your industry." lead="Not on the list? 24x7 Automation works for any business that answers customers by message, and our custom automation service covers the rest." />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,280px),1fr))', gap: 20 }}>
           {IND.map((x, i) => (

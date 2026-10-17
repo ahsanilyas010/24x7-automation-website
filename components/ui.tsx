@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { breadcrumbLd } from '@/lib/seo';
+import ChannelStrip from './ChannelStrip';
 
 /** Splits a heading into words that rise into view when their section is revealed. */
 export function Split({ text, delay = 0 }: { text: string; delay?: number }) {
@@ -26,7 +27,7 @@ export function Breadcrumbs({ trail }: { trail: { name: string; path: string }[]
   return (
     <>
       <JsonLd data={breadcrumbLd(trail)} />
-      <nav aria-label="Breadcrumb" style={{ fontSize: 14, color: '#6D675C' }}>
+      <nav aria-label="Breadcrumb" className="crumb" style={{ fontSize: 14, color: '#6D675C' }}>
         <ol style={{ display: 'flex', flexWrap: 'wrap', gap: 8, listStyle: 'none', margin: 0, padding: 0 }}>
           <li><Link href="/">Home</Link></li>
           {trail.map((t, i) => (
@@ -42,14 +43,15 @@ export function Breadcrumbs({ trail }: { trail: { name: string; path: string }[]
 }
 
 /** Opening block of every inner page: breadcrumb, one h1, lead paragraph and calls to action. */
-export function PageHero({ trail, eyebrow, title, lead, children }: { trail: { name: string; path: string }[]; eyebrow: string; title: string; lead: string; children?: ReactNode }) {
+export function PageHero({ trail, eyebrow, title, lead, children, strip = true }: { trail: { name: string; path: string }[]; eyebrow: string; title: string; lead: string; children?: ReactNode; strip?: boolean }) {
   return (
-    <section className="wrap" style={{ paddingTop: 40, paddingBottom: 64, display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <section className="wrap" style={{ paddingTop: 40, paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 24 }}>
       <Breadcrumbs trail={trail} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 820, paddingTop: 16 }}>
         <span className="eyebrow" data-reveal="0">{eyebrow}</span>
         <h1 className="hero-h1" style={{ margin: 0, fontSize: 'clamp(38px,5vw,64px)', lineHeight: 1.04, letterSpacing: '-0.035em', fontWeight: 700, textWrap: 'balance' }}><Split text={title} delay={1} /></h1>
         <p data-reveal="140" className="lead" style={{ fontSize: 20, lineHeight: '30px', maxWidth: 680 }}>{lead}</p>
+        {strip ? <div data-reveal="180"><ChannelStrip /></div> : null}
         {children ? <div data-reveal="220" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>{children}</div> : null}
       </div>
     </section>
@@ -74,7 +76,8 @@ export function BookDemoButton({ label = 'Book a demo', large }: { label?: strin
 export function CtaBand({ title = 'Talk to us now to get everything connected and boost your sales and service.', text = 'A 20 minute call. We set it up with your industry stages and a few of your real questions, so you see replies in your own words.' }: { title?: string; text?: string }) {
   return (
     <section style={{ background: '#12110E', color: '#EEEAE2' }}>
-      <div className="wrap" style={{ paddingTop: 88, paddingBottom: 88, display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'flex-start' }}>
+      <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'flex-start' }}>
+        <div data-reveal="0"><ChannelStrip dark /></div>
         <h2 data-reveal="0" className="h2" style={{ color: '#FFFFFF', maxWidth: 780 }}><Split text={title} /></h2>
         <p data-reveal="120" style={{ margin: 0, fontSize: 19, lineHeight: '29px', color: '#CBC5BA', maxWidth: 620 }}>{text}</p>
         <div data-reveal="200" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>

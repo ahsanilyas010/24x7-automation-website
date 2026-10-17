@@ -12,6 +12,7 @@ a:hover { color: #0B7282; }
 input, select, button { font-family: inherit; }
 :focus-visible { outline: 2px solid #17150F; outline-offset: 2px; }
 
+:root { --sec-lg: 112px; --sec-md: 96px; --sec-sm: 56px; --card-pad: 32px; }
 .page { min-height: 100vh; overflow-x: clip; }
 .wrap { max-width: 1200px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
 
@@ -205,7 +206,7 @@ input, select, button { font-family: inherit; }
 @keyframes live-ping { 0% { box-shadow: 0 0 0 0 rgba(11,114,130,.5); } 100% { box-shadow: 0 0 0 8px rgba(11,114,130,0); } }
 .live-dot { width: 8px; height: 8px; border-radius: 999px; background: #0B7282; animation: live-ping 1600ms ease-out infinite; }
 .otj-slide { position: absolute; inset: 0; transition: opacity 1100ms ease; }
-.otj-dots { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.otj-dots { display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 .otj-dots button { width: 9px; height: 9px; padding: 0; border-radius: 999px; border: 0; background: rgba(255,255,255,.4); cursor: pointer; transition: width 250ms var(--ease-out), background 150ms ease; }
 .otj-dots button.on { width: 26px; background: #62C6D3; }
 .otj-dots button:focus-visible { outline-color: #62C6D3; }
@@ -223,4 +224,52 @@ input, select, button { font-family: inherit; }
   .site-nav .nav-link { padding: 14px 0; border-bottom: 1px solid #E0DBD1; font-size: 17px; }
   .site-nav .nav-link::after { display: none; }
   .site-nav .btn { margin-top: 16px; height: 48px !important; }
+}
+
+/* ---------- Channel strip: many channels, one place ---------- */
+.chstrip { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.chstrip-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chstrip-chip { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 12px 0 8px; border-radius: 999px; font-size: 14px; font-weight: 600; background: var(--t); color: var(--c); white-space: nowrap; }
+.chstrip-arrow { display: inline-flex; color: #6D675C; }
+.chstrip-hub { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px; background: #17150F; color: #FFFFFF; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.chstrip.dark .chstrip-chip { background: rgba(255,255,255,.08); color: #EEEAE2; }
+.chstrip.dark .chstrip-hub { background: #62C6D3; color: #12110E; }
+.chstrip.dark .chstrip-arrow { color: #A29B8F; }
+.chstrip-hub svg { flex: none; }
+@keyframes chip-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.reveal-ready [data-shown] .chstrip-chip, .chstrip-chip { animation: chip-in 450ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.otj-dots button { position: relative; }
+.otj-dots button::after { content: ''; position: absolute; inset: -18px -6px; }
+.crumb a { display: inline-block; padding: 12px 0; }
+.foot-link { display: inline-block; padding: 11px 0; }
+@media (prefers-reduced-motion: reduce) { .chstrip-chip { animation: none; } }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 760px) {
+  :root { --sec-lg: 64px; --sec-md: 56px; --sec-sm: 32px; --card-pad: 20px; }
+  .wrap { padding-left: 20px; padding-right: 20px; }
+  .h2 { font-size: clamp(30px, 8.4vw, 38px); }
+  .lead { font-size: 17px; line-height: 26px; }
+  .btn { min-height: 48px; }
+  .chip { height: 46px; }
+  .faq-btn { font-size: 17px; min-height: 64px; }
+  .uc-btn { padding: 16px; }
+  .dash-grid { grid-template-columns: repeat(2, 1fr); }
+  .chstrip-chip { height: 40px; font-size: 15px; }
+  .chstrip-hub { height: 40px; }
+  .sticky-lg { position: static !important; }
+  .site-nav { max-height: calc(100vh - 68px); overflow-y: auto; }
+  .site-nav .nav-link { min-height: 48px; display: flex; align-items: center; }
+  .otj-media { height: 520px; }
+  .otj-copy p { font-size: 16px !important; line-height: 24px !important; }
+  .photo-chip { font-size: 13px; }
+  .ind-card { padding: 20px; }
+}
+@media (max-width: 560px) {
+  .chstrip-hub { width: 100%; justify-content: center; }
+}
+@media (max-width: 420px) {
+  .chstrip-chips { gap: 6px; }
+  .chstrip-chip { padding: 0 10px 0 7px; font-size: 14px; }
 }

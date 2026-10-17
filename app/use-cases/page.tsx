@@ -12,13 +12,13 @@ export const metadata = pageMetadata({
 export default function Page() {
   return (
     <>
-      <PageHero trail={[{ name: 'Use cases', path: '/use-cases' }]} eyebrow="Use cases" title="What it handles while you are on the job." lead="Real conversations, handled the way you would handle them. Choose a use case to watch it play out, or read through them all below.">
+      <PageHero trail={[{ name: 'Use cases', path: '/use-cases' }]} eyebrow="Use cases" title="What it handles while you are on the job." lead="Real conversations from every channel, handled in one place the way you would handle them. Choose a use case to watch it play out, or read through them all below.">
         <BookDemoButton large />
       </PageHero>
       <section style={{ background: '#12110E', color: '#EEEAE2' }}>
-        <div className="wrap" style={{ paddingTop: 96, paddingBottom: 96 }}><UseCases /></div>
+        <div className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)' }}><UseCases /></div>
       </section>
-      <section className="wrap" style={{ paddingTop: 96, paddingBottom: 96, display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <section className="wrap" style={{ paddingTop: 'var(--sec-md)', paddingBottom: 'var(--sec-md)', display: 'flex', flexDirection: 'column', gap: 40 }}>
         <SectionHead eyebrow="All use cases" title="Every conversation, taken care of." />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))', gap: 20 }}>
           {UC.map((u, i) => (

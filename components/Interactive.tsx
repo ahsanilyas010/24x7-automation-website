@@ -111,7 +111,7 @@ export function Industries() {
             })}
           </div>
           <span style={{ fontSize: 14, lineHeight: '20px', color: '#A29B8F' }}>Every stage can be renamed, reordered or removed in Settings.</span>
-          <Link href={`/industries/${cur.slug}`} style={{ color: '#62C6D3', fontSize: 15, fontWeight: 600 }}>See how it works for {cur.name.toLowerCase()} &rarr;</Link>
+          <Link href={`/industries/${cur.slug}`} style={{ color: '#62C6D3', fontSize: 15, fontWeight: 600, display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>See how it works for {cur.name.toLowerCase()} &rarr;</Link>
         </div>
       </div>
     </>
@@ -140,7 +140,7 @@ export function UseCases() {
           );
         })}
       </div>
-      <div data-reveal="160" style={{ minWidth: 0, position: 'sticky', top: 96 }}>
+      <div data-reveal="160" className="sticky-lg" style={{ minWidth: 0, position: 'sticky', top: 96 }}>
         <UseCaseDemo key={uc} uc={UC[uc]} onProgress={setProg} onDone={advance} />
       </div>
     </div>

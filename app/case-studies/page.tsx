@@ -11,11 +11,11 @@ export const metadata = pageMetadata({
 export default function Page() {
   return (
     <>
-      <PageHero trail={[{ name: 'Case studies', path: '/case-studies' }]} eyebrow="Case studies" title="Teams answered faster." lead="Three sample stories that show how teams in different trades use 24x7 Automation. Real customer stories will replace these as they are published.">
+      <PageHero trail={[{ name: 'Case studies', path: '/case-studies' }]} eyebrow="Case studies" title="Teams answered faster." lead="Three sample stories that show how teams in different trades manage every channel in one place with 24x7 Automation. Real customer stories will replace these as they are published.">
         <span className="sample-tag">Sample stories for layout. Real customers to follow.</span>
         <BookDemoButton large />
       </PageHero>
-      <section className="wrap" style={{ paddingBottom: 96 }}><StoriesGrid /></section>
+      <section className="wrap" style={{ paddingBottom: 'var(--sec-md)' }}><StoriesGrid /></section>
       <CtaBand />
     </>
   );

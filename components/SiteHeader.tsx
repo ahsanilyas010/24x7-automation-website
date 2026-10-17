@@ -14,7 +14,7 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="wrap" style={{ minHeight: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }} aria-label="24x7 Automation home">
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44 }} aria-label="24x7 Automation home">
           <Logo size={34} ink="#17150F" accent="#0B7282" live />
           <span style={{ fontSize: 18, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}><span style={{ fontWeight: 700 }}>24x7</span><span style={{ fontWeight: 500, color: '#4B463D' }}> automation</span></span>
         </Link>
