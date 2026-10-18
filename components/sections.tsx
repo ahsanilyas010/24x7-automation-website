@@ -8,14 +8,14 @@ import { SITE } from '@/lib/site';
 import { abs } from '@/lib/seo';
 
 export const STEPS = [
-  { n: '01', bar: '#17150F', t: 'Connect all your channels in one place', d: 'Link every WhatsApp number, email inbox, SMS number, Facebook, Instagram and LinkedIn account to a single dashboard. Import your existing contacts from a CSV file.' },
+  { n: '01', bar: '#17150F', t: 'Connect all your channels in one place', d: 'Link every WhatsApp number, email inbox, Facebook, Instagram and LinkedIn account to a single dashboard. Import your existing contacts from a CSV file.' },
   { n: '02', bar: '#0B7282', t: 'Provide your business information', d: 'Upload your terms, prices, FAQs and documents. Pick your industry and the stages fill in for you. Rename any of them in Settings.' },
   { n: '03', bar: '#3B6E2A', t: 'Control your conversations', d: 'Choose how you want to talk to your customers across every channel, then step in only when something needs you. Each item takes one tap: Done, Delegate, Follow up or Remind me.' },
 ];
 
 export const STORIES = [
   { where: 'Construction · Leeds', t: 'A builder who stopped losing evening enquiries', d: 'Most quote requests came in on WhatsApp after 7pm, when the team was off site. Replies are now drafted straight away and the site visit is booked from the chat.', stat: 2, pre: '', suf: ' min', statL: 'typical first reply, day or night', q: 'I open Needs you with my coffee and there are four things to decide. That is it.' },
-  { where: 'Dental clinic · Bristol', t: 'A front desk that rebooks by text', d: 'Patients moving appointments used to mean phone tag. Now they text, open slots are offered, and the edited reply is saved as a template for next time.', stat: 3, pre: '', suf: ' of 4', statL: 'rebookings handled without staff', q: 'Reception answers the phone for people who need us, not for diary changes.' },
+  { where: 'Dental clinic · Bristol', t: 'A front desk that rebooks by message', d: 'Patients moving appointments used to mean phone tag. Now they message, open slots are offered, and the edited reply is saved as a template for next time.', stat: 3, pre: '', suf: ' of 4', statL: 'rebookings handled without staff', q: 'Reception answers the phone for people who need us, not for diary changes.' },
   { where: 'Plumbing and heating · Manchester', t: 'Calm complaint replies, backed by the terms', d: 'Disputes over callout fees took hours of back and forth. Each complaint now gets a draft built from the company terms, with the clause shown, ready to approve.', stat: 1, pre: '', suf: ' tap', statL: 'to check the clause behind a reply', q: 'I can see exactly which part of our terms it quoted before anything goes out.' },
 ];
 
@@ -96,7 +96,7 @@ export function SecurityGrid() {
 }
 
 const FACTORS = [
-  { t: 'The channels you use', d: 'WhatsApp, email, SMS, Facebook, Instagram and LinkedIn, including how many accounts and numbers you connect.' },
+  { t: 'The channels you use', d: 'WhatsApp, email, Facebook, Instagram and LinkedIn, including how many accounts and numbers you connect.' },
   { t: 'Your conversation volume', d: 'A quiet studio and a busy contractor need different capacity. We size the plan to your real traffic.' },
   { t: 'Your team and industry', d: 'How many people step in, and which stages, templates and documents your industry needs from day one.' },
 ];
@@ -203,5 +203,50 @@ export function LeadSection({ h1 }: { h1?: boolean }) {
         <DemoForm />
       </div>
     </section>
+  );
+}
+
+const DATA_POINTS = [
+  { t: 'End-to-end encrypted', d: 'Your conversations are protected with end-to-end encryption, so the messages that pass through 24x7 Automation stay private to you.' },
+  { t: 'We cannot read your messages', d: 'We connect your domains and platforms to our system, but we do not have access to see your emails, WhatsApps or social messages.' },
+  { t: 'You choose what connects', d: 'Each channel connects only with the access you grant. Disconnect a channel at any time and it stops.' },
+  { t: 'Connection access kept safe', d: 'The access you grant, such as your email connection, is held in an encrypted vault and never stored in plain text.' },
+  { t: 'Nothing hidden', d: 'We explain how your data is stored and who can reach it, in plain language. You have the right to know where your information goes.' },
+  { t: 'A record of every action', d: 'Every message, edit and action is logged by day, with who did it, so you can always see exactly what happened.' },
+];
+
+const CAN = ['Connect to the channels you choose to authorise', 'Prepare reply drafts from your own terms and documents', 'Show you your own dashboard, folders and audit log'];
+const CANNOT = ['Read your private emails, WhatsApps or social messages', 'Send anything on your behalf while Shadow mode is on', 'Keep a channel connected after you disconnect it'];
+
+/** Plain-language data and encryption explainer for the Security and control page. */
+export function DataTransparency() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 20 }}>
+        {DATA_POINTS.map((p, i) => (
+          <div key={p.t} data-reveal={String(i * 70)} className="card lift spot" style={{ padding: 26, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <span style={{ width: 40, height: 40, borderRadius: 10, background: '#E2F2F4', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" style={{ fill: 'none', stroke: '#0B7282', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }}><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+            </span>
+            <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>{p.t}</h3>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: '24px', color: '#4B463D' }}>{p.d}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))', gap: 20 }}>
+        <div data-reveal="0" style={{ padding: 28, borderRadius: 14, background: '#EAF2E4', border: '1px solid #B9D5A8', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#2C531F' }}>What 24x7 Automation can do</h3>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {CAN.map((x) => <li key={x} style={{ display: 'flex', gap: 10, fontSize: 16, lineHeight: '24px', color: '#17150F' }}><span style={{ color: '#3B6E2A', fontWeight: 700 }}>&#10003;</span>{x}</li>)}
+          </ul>
+        </div>
+        <div data-reveal="100" style={{ padding: 28, borderRadius: 14, background: '#FFFFFF', border: '1px solid #E0DBD1', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>What it cannot do</h3>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {CANNOT.map((x) => <li key={x} style={{ display: 'flex', gap: 10, fontSize: 16, lineHeight: '24px', color: '#17150F' }}><span style={{ color: '#B3261E', fontWeight: 700 }}>&#10005;</span>{x}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }

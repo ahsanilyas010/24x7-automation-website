@@ -35,8 +35,8 @@ export default async function Page({ params }: Props) {
 
       <section className="wrap" style={{ paddingBottom: 'var(--sec-md)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: 32, alignItems: 'stretch' }}>
         <div className="photo img-reveal" data-reveal="0" style={{ minHeight: 360 }}>
-          <div data-parallax="0.06" className="photo-inner">
-            <Image src={ph.src} alt={ph.alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 600px" style={{ objectFit: 'cover', objectPosition: ph.pos }} />
+          <div data-parallax="0.03" className="photo-inner">
+            <Image src={ph.src} alt={ph.alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 600px" quality={90} style={{ objectFit: 'cover', objectPosition: ph.pos }} />
           </div>
         </div>
         <div data-reveal="120" style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: 28, borderRadius: 14, background: '#FFFFFF', border: '1px solid #E0DBD1' }}>

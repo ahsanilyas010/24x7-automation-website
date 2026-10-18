@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { COUNTRIES, CH, FAQ, IND, UC } from './data';
@@ -37,22 +37,30 @@ export function Industries() {
   const [step, setStep] = useState(0);
   const [replied, setReplied] = useState(true);
   const [auto, setAuto] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const iv = setInterval(() => setStep((s) => s + 1), 1400);
+    const iv = setInterval(() => setStep((s) => s + 1), 350);
     return () => clearInterval(iv);
   }, []);
-  const go = (i: number) => {
-    setInd(i); setStep(0);
-    if (reducedMotion()) return;
-    setReplied(false);
-    setTimeout(() => setReplied(true), 1100);
-  };
-  // The industry changes by itself until the visitor picks one.
   useEffect(() => {
-    if (!auto || reducedMotion()) return;
-    const t = setTimeout(() => go((ind + 1) % IND.length), 7000);
+    if (!box.current) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.15 });
+    io.observe(box.current);
+    return () => io.disconnect();
+  }, []);
+  const go = (i: number, instant = false) => {
+    setInd(i); setStep(0);
+    if (instant || reducedMotion()) { setReplied(true); return; }
+    setReplied(false);
+    setTimeout(() => setReplied(true), 600);
+  };
+  // Time-lapse: while the section is on screen the industry changes every second, until the visitor picks one.
+  useEffect(() => {
+    if (!auto || !visible || reducedMotion()) return;
+    const t = setTimeout(() => go((ind + 1) % IND.length, true), 1000);
     return () => clearTimeout(t);
-  }, [auto, ind]);
+  }, [auto, visible, ind]);
   const pick = (i: number) => {
     setAuto(false);
     if (i !== ind) go(i);
@@ -60,7 +68,7 @@ export function Industries() {
   const cur = IND[ind], c = CH[cur.ch], last = cur.stages.length - 1, act = step % last;
 
   return (
-    <>
+    <div ref={box} style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
       <div data-reveal="80" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }} role="tablist" aria-label="Industries">
         {IND.map((x, i) => {
           const a = i === ind;
@@ -75,7 +83,7 @@ export function Industries() {
       <div data-reveal="160" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: 24 }}>
         <Enter key={ind} from="translateY(12px) scale(.985)" d={350} style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 28, borderRadius: 14, background: '#F6F4EF', border: '1px solid #E0DBD1', minHeight: 300 }}>
           <div className="ind-photo">
-            <Image src={PHOTOS[cur.photo].src} alt={PHOTOS[cur.photo].alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 560px" style={{ objectFit: 'cover', objectPosition: PHOTOS[cur.photo].pos }} />
+            <Image src={PHOTOS[cur.photo].src} alt={PHOTOS[cur.photo].alt} fill placeholder="blur" sizes="(max-width: 900px) 100vw, 560px" quality={90} style={{ objectFit: 'cover', objectPosition: PHOTOS[cur.photo].pos }} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 15, fontWeight: 600, color: '#4B463D' }}>{cur.who}</span>
@@ -114,7 +122,7 @@ export function Industries() {
           <Link href={`/industries/${cur.slug}`} style={{ color: '#62C6D3', fontSize: 15, fontWeight: 600, display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>See how it works for {cur.name.toLowerCase()} &rarr;</Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
