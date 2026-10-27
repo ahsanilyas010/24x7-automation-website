@@ -32,6 +32,9 @@ export function RevealController() {
   return null;
 }
 
+/** How long each industry stays on screen in the home page time-lapse before it moves on. */
+const AUTO_ROTATE_MS = 4000;
+
 export function Industries() {
   const [ind, setInd] = useState(0);
   const [step, setStep] = useState(0);
@@ -55,10 +58,10 @@ export function Industries() {
     setReplied(false);
     setTimeout(() => setReplied(true), 600);
   };
-  // Time-lapse: while the section is on screen the industry changes every second, until the visitor picks one.
+  // Time-lapse: while the section is on screen the industry changes every four seconds, until the visitor picks one.
   useEffect(() => {
     if (!auto || !visible || reducedMotion()) return;
-    const t = setTimeout(() => go((ind + 1) % IND.length, true), 1000);
+    const t = setTimeout(() => go((ind + 1) % IND.length, true), AUTO_ROTATE_MS);
     return () => clearTimeout(t);
   }, [auto, visible, ind]);
   const pick = (i: number) => {
